@@ -53,3 +53,16 @@ preloadImages.forEach(src => {
   const img = new Image()
   img.src = src
 })
+
+// 7. Disable zooming (ctrl + wheel / ctrl + keys)
+document.addEventListener('wheel', (e) => {
+  if (e.ctrlKey) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=')) {
+    e.preventDefault();
+  }
+});
