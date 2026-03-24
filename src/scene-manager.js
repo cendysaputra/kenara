@@ -73,6 +73,8 @@ function renderHero(data, index) {
     `
   }
 
+  const currentYear = new Date().getFullYear()
+
   el.innerHTML = `
     ${videoHTML}
     <div class="hero-content">
@@ -83,6 +85,7 @@ function renderHero(data, index) {
         <span class="btn-icon">→</span>
       </button>
     </div>
+    <div class="hero-copyright">&copy; ${currentYear} Cendy Saputra</div>
   `
   return el
 }

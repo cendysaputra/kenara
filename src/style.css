@@ -17,7 +17,12 @@
   --container-max: 1440px;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing:
+   border-box;
+}
 
 body {
   background-color: var(--canvas);
@@ -25,9 +30,7 @@ body {
   font-family: var(--font-body);
 }
 
-/* ========================
-   STORY CONTAINER (pinned)
-   ======================== */
+/* STORY CONTAINER */
 #story-container {
   position: fixed;
   top: 0;
@@ -37,9 +40,7 @@ body {
   overflow: hidden;
 }
 
-/* ========================
-   SCREEN (base for all)
-   ======================== */
+/* SCREEN */
 .screen {
   position: absolute;
   top: 0;
@@ -60,9 +61,7 @@ body {
 
 
 
-/* ========================
-   HERO COVER
-   ======================== */
+/* HERO COVER */
 .screen-hero {
   background-size: cover;
   background-position: center;
@@ -85,7 +84,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100vw; /* Using 16:9 aspect ratio trick to cover */
+  width: 100vw;
   height: 56.25vw; 
   min-height: 100vh;
   min-width: 177.77vh; 
@@ -111,12 +110,13 @@ body {
   text-align: left;
   width: 100%;
   height: 100%;
-  padding-left: 10%;
+  padding-left: 5%;
+  margin-top: -200px;
 }
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: 72px;
+  font-size: 80px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: 0.02em;
@@ -127,8 +127,8 @@ body {
 .hero-subtitle {
   font-family: var(--font-body);
   font-style: italic;
-  font-size: 18px;
-  color: var(--text-muted);
+  font-size: 24px;
+  color: var(--text-body);
   margin-bottom: 12px;
 }
 
@@ -140,24 +140,25 @@ body {
   border: none;
   cursor: pointer;
   padding: 0;
-  margin-top: 4px;
+  margin-top: 20px;
   transition: opacity 0.3s ease;
 }
 
 .hero-start-btn .btn-text {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 18px;
   color: var(--text-primary);
+  font-style: italic;
 }
 
 .hero-start-btn .btn-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  border: 1px solid rgba(61, 43, 31, 0.15); /* light border */
+  border: 1px solid rgba(61, 43, 31, 0.2);
   background: transparent;
   color: var(--text-primary);
   font-size: 20px;
@@ -170,16 +171,24 @@ body {
   border-color: var(--dark-scene);
 }
 
-/* ========================
-   CHAPTER TITLE CARD
-   ======================== */
+.hero-copyright {
+  position: absolute;
+  bottom: 24px;
+  left: 5%;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: black;
+  font-style: italic;
+  z-index: 10;
+}
+
+/* CHAPTER TITLE CARD */
 .screen-chapter-card {
   flex-direction: column;
   text-align: center;
   background-color: var(--canvas);
 }
 
-/* Dark variant for dark chapters */
 .screen-chapter-card.dark {
   background-color: var(--dark-scene);
 }
@@ -189,7 +198,6 @@ body {
   color: var(--canvas);
 }
 
-/* Golden variant */
 .screen-chapter-card.golden {
   background-color: var(--dark-scene);
 }
@@ -221,16 +229,13 @@ body {
   line-height: 1.2;
 }
 
-/* ========================
-   SCENE (narration + bg)
-   ======================== */
+/* SCENE */
 .screen-scene {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-/* Per-scene background position overrides if needed */
 .screen-scene[data-text-position="left"] {
   background-position: right center;
 }
@@ -282,9 +287,7 @@ body {
   text-align: left;
 }
 
-/* ========================
-   ENDING SCREEN
-   ======================== */
+/* ENDING SCREEN */
 .screen-ending {
   flex-direction: column;
   text-align: center;
@@ -308,9 +311,7 @@ body {
   opacity: 0.5;
 }
 
-/* ========================
-   UI ELEMENTS
-   ======================== */
+/* UI ELEMENTS */
 #grain-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -426,7 +427,6 @@ body {
   border-color: var(--gold-accent);
 }
 
-/* Visibility toggles for Hero Screen */
 body.hero-active #chapter-nav,
 body.hero-active #audio-toggle {
   display: none !important;
@@ -438,9 +438,7 @@ body.hero-active #bottom-controls button {
   opacity: 1; /* full opacity for maximum contrast */
 }
 
-/* ========================
-   RESPONSIVE
-   ======================== */
+/* RESPONSIVE */
 @media (max-width: 1023px) {
   .hero-title { font-size: 56px; }
   .chapter-card-title { font-size: 44px; }
