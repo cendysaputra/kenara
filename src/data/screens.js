@@ -1,17 +1,15 @@
 export const screens = [
-  // ========================
   // HERO
-  // ========================
   {
     type: "hero",
     background: "/assets/img/cover-hero.jpg",
+    // youtubeId: "LrZELjUukR0",
+    video: "/assets/img/kenara-hero.mp4",
     title: "The Golden Shell",
     subtitle: "An Indonesian Fairy Tale"
   },
 
-  // ========================
   // CHAPTER 1
-  // ========================
   {
     type: "chapter-card",
     chapter: 1,
@@ -51,9 +49,7 @@ export const screens = [
     background: "/assets/img/chapter-1-scene-4.jpg"
   },
 
-  // ========================
   // CHAPTER 2
-  // ========================
   {
     type: "chapter-card",
     chapter: 2,
@@ -85,9 +81,7 @@ export const screens = [
     background: "/assets/img/chapter-2-scene-3.jpg"
   },
 
-  // ========================
   // CHAPTER 3
-  // ========================
   {
     type: "chapter-card",
     chapter: 3,
@@ -127,9 +121,7 @@ export const screens = [
     background: "/assets/img/chapter-3-scene-4.jpg"
   },
 
-  // ========================
   // CHAPTER 4
-  // ========================
   {
     type: "chapter-card",
     chapter: 4,
@@ -161,9 +153,7 @@ export const screens = [
     background: "/assets/img/chapter-4-scene-3.jpg"
   },
 
-  // ========================
   // CHAPTER 5
-  // ========================
   {
     type: "chapter-card",
     chapter: 5,
@@ -203,9 +193,7 @@ export const screens = [
     background: "/assets/img/chapter-5-scene-4.jpg"
   },
 
-  // ========================
   // CHAPTER 6
-  // ========================
   {
     type: "chapter-card",
     chapter: 6,
@@ -245,9 +233,7 @@ export const screens = [
     background: "/assets/img/chapter-6-scene-4.jpg"
   },
 
-  // ========================
   // CHAPTER 7
-  // ========================
   {
     type: "chapter-card",
     chapter: 7,
@@ -287,9 +273,7 @@ export const screens = [
     background: "/assets/img/chapter-7-scene-4.jpg"
   },
 
-  // ========================
   // ENDING
-  // ========================
   {
     type: "ending",
     text: "And so the tale lives on — passed down from one generation to the next.",

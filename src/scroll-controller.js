@@ -15,9 +15,12 @@ export function initScrollController(onScreenChange) {
   let touchStartY = 0
   
   function navigate(direction) {
-    // Debounce to ensure 1 scroll = 1 section (lock for 1000ms)
+    // Prevent scrolling past hero screen. Must use the start button.
+    if (currentScreen === 0 && direction > 0) return
+
+    // Debounce to ensure 1 scroll = 1 section (lock for 1500ms for slower transitions)
     const now = Date.now()
-    if (now - lastScrollTime < 1000) return
+    if (now - lastScrollTime < 1500) return
     lastScrollTime = now
 
     let targetScreen = currentScreen + direction

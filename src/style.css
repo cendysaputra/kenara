@@ -58,6 +58,8 @@ body {
   pointer-events: auto;
 }
 
+
+
 /* ========================
    HERO COVER
    ======================== */
@@ -66,7 +68,50 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   flex-direction: column;
-  text-align: center;
+}
+
+.hero-video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-video-bg iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw; /* Using 16:9 aspect ratio trick to cover */
+  height: 56.25vw; 
+  min-height: 100vh;
+  min-width: 177.77vh; 
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border: none;
+}
+
+.hero-video-bg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  width: 100%;
+  height: 100%;
+  padding-left: 10%;
 }
 
 .hero-title {
@@ -76,6 +121,7 @@ body {
   color: var(--text-primary);
   letter-spacing: 0.02em;
   line-height: 1.1;
+  margin-bottom: 8px;
 }
 
 .hero-subtitle {
@@ -83,22 +129,45 @@ body {
   font-style: italic;
   font-size: 18px;
   color: var(--text-muted);
-  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 40px;
+.hero-start-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 4px;
+  transition: opacity 0.3s ease;
+}
+
+.hero-start-btn .btn-text {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--text-muted);
-  opacity: 0.5;
-  animation: bounceDown 2s ease-in-out infinite;
+  font-size: 16px;
+  color: var(--text-primary);
 }
 
-@keyframes bounceDown {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(8px); }
+.hero-start-btn .btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(61, 43, 31, 0.15); /* light border */
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.hero-start-btn:hover .btn-icon {
+  background: var(--dark-scene);
+  color: var(--canvas);
+  border-color: var(--dark-scene);
 }
 
 /* ========================
@@ -269,23 +338,68 @@ body {
   transition: width 0.3s ease;
 }
 
-#audio-toggle {
+#bottom-controls {
   position: fixed;
-  top: 24px; right: 24px;
+  bottom: 24px;
+  right: 24px;
   z-index: 100;
-  background: none;
-  border: 1px solid var(--text-muted);
-  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#bottom-controls button {
+  background: transparent;
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
   width: 40px; height: 40px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  font-family: var(--font-body);
   transition: all 0.3s ease;
-  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
 }
 
-#audio-toggle:hover { opacity: 1; border-color: var(--gold-accent); color: var(--gold-accent); }
+#audio-icon {
+  font-size: 16px;
+}
+
+#bottom-controls button:hover {
+  opacity: 1; border-color: var(--gold-accent); color: var(--gold-accent);
+}
 #audio-toggle.muted { opacity: 0.3; }
+
+.info-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 100%;
+  margin-right: 12px;
+  background: var(--dark-scene);
+  color: var(--canvas);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateX(10px);
+  font-family: var(--font-body);
+}
+
+.info-wrapper:hover .info-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
 
 #chapter-nav {
   position: fixed;
@@ -310,6 +424,18 @@ body {
 #chapter-nav .dot.active {
   background: var(--gold-accent);
   border-color: var(--gold-accent);
+}
+
+/* Visibility toggles for Hero Screen */
+body.hero-active #chapter-nav,
+body.hero-active #audio-toggle {
+  display: none !important;
+}
+
+body.hero-active #bottom-controls button {
+  color: var(--canvas);
+  border-color: var(--canvas);
+  opacity: 1; /* full opacity for maximum contrast */
 }
 
 /* ========================
@@ -339,5 +465,7 @@ body {
   }
 
   #chapter-nav { display: none; }
-  #audio-toggle { top: 16px; right: 16px; width: 36px; height: 36px; font-size: 14px; }
+  #bottom-controls { bottom: 16px; right: 16px; gap: 8px; }
+  #bottom-controls button { width: 36px; height: 36px; font-size: 12px; }
+  #audio-icon { font-size: 14px; }
 }

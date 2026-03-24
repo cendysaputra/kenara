@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>The Golden Shell</title>
+
+  <!-- SEO & Social Share -->
+  <link rel="icon" href="/assets/img/favicon.png">
+  <meta property="og:title" content="The Golden Shell - An Indonesian Fairy Tale">
+  <meta property="og:description" content="Discover the magical tale of Candra Kirana, the Golden Shell.">
+  <meta property="og:image" content="/assets/img/meta-seo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,10 +22,17 @@
   <!-- Grain overlay -->
   <div id="grain-overlay"></div>
 
-  <!-- Audio toggle -->
-  <button id="audio-toggle" aria-label="Toggle sound">
-    <span id="audio-icon">♪</span>
-  </button>
+  <!-- Bottom right controls -->
+  <div id="bottom-controls">
+    <button id="audio-toggle" aria-label="Toggle sound">
+      <span id="audio-icon">♪</span>
+    </button>
+    <div class="info-wrapper">
+      <button id="info-btn" aria-label="Information">i</button>
+      <div class="info-tooltip">Create by Cendy Saputra</div>
+    </div>
+    <button id="lang-btn" aria-label="Toggle language">EN</button>
+  </div>
 
   <!-- Progress bar -->
   <div id="progress-bar">

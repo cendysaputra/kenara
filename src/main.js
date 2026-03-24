@@ -18,11 +18,20 @@ for (let i = 1; i <= 7; i++) {
   nav.appendChild(dot)
 }
 
+// Set initial state
+document.body.classList.add('hero-active')
+
 // 3. Initialize scroll controller
 initScrollController((fromIndex, toIndex) => {
   const allScreens = container.querySelectorAll('.screen')
   const fromEl = allScreens[fromIndex]
   const toEl = allScreens[toIndex]
+
+  if (toIndex === 0) {
+    document.body.classList.add('hero-active')
+  } else {
+    document.body.classList.remove('hero-active')
+  }
 
   if (fromEl && toEl) {
     transitionScenes(fromEl, toEl)

@@ -47,23 +47,23 @@ function createOverlay(color) {
 }
 
 const transitions = {
-  // Simple crossfade (0.8s)
+  // Simple crossfade (1.5s)
   crossfade(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0, scale: 1, x: 0, y: 0 })
-    tl.to(from, { opacity: 0, duration: 0.8, ease: 'power2.inOut' })
-    tl.to(to, { opacity: 1, duration: 0.8, ease: 'power2.inOut' }, '-=0.6')
+    tl.to(from, { opacity: 0, duration: 1.5, ease: 'power2.inOut' })
+    tl.to(to, { opacity: 1, duration: 1.5, ease: 'power2.inOut' }, '-=1.0')
     tl.set(from, { opacity: 0 })
     to.classList.add('active')
     from.classList.remove('active')
   },
 
-  // Slow fade with dark tint (1.2s)
+  // Slow fade with dark tint (2.0s)
   slowFadeDark(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0 })
-    tl.to(from, { opacity: 0, duration: 1.2, ease: 'power1.inOut' })
-    tl.to(to, { opacity: 1, duration: 1.2, ease: 'power1.inOut' }, '-=0.8')
+    tl.to(from, { opacity: 0, duration: 2.0, ease: 'power2.inOut' })
+    tl.to(to, { opacity: 1, duration: 2.0, ease: 'power2.inOut' }, '-=1.2')
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -73,8 +73,8 @@ const transitions = {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 1, x: '100%' })
     to.classList.add('active')
-    tl.to(from, { x: '-30%', opacity: 0, duration: 0.8, ease: 'power2.inOut' })
-    tl.to(to, { x: '0%', duration: 0.8, ease: 'power2.inOut' }, '-=0.8')
+    tl.to(from, { x: '-30%', opacity: 0, duration: 1.5, ease: 'power3.inOut' })
+    tl.to(to, { x: '0%', duration: 1.5, ease: 'power3.inOut' }, '-=1.2')
     tl.set(from, { x: '0%', opacity: 0 })
     from.classList.remove('active')
   },
@@ -84,8 +84,8 @@ const transitions = {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 1, x: '-100%' })
     to.classList.add('active')
-    tl.to(from, { x: '30%', opacity: 0, duration: 0.8, ease: 'power2.inOut' })
-    tl.to(to, { x: '0%', duration: 0.8, ease: 'power2.inOut' }, '-=0.8')
+    tl.to(from, { x: '30%', opacity: 0, duration: 1.5, ease: 'power3.inOut' })
+    tl.to(to, { x: '0%', duration: 1.5, ease: 'power3.inOut' }, '-=1.2')
     tl.set(from, { x: '0%', opacity: 0 })
     from.classList.remove('active')
   },
@@ -94,8 +94,8 @@ const transitions = {
   crossfadeZoomOut(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0, scale: 1 })
-    tl.to(from, { opacity: 0, scale: 0.95, duration: 0.8, ease: 'power2.inOut' })
-    tl.to(to, { opacity: 1, duration: 0.8, ease: 'power2.inOut' }, '-=0.6')
+    tl.to(from, { opacity: 0, scale: 0.95, duration: 1.5, ease: 'power2.inOut' })
+    tl.to(to, { opacity: 1, duration: 1.5, ease: 'power2.inOut' }, '-=1.0')
     tl.set(from, { scale: 1, opacity: 0 })
     to.classList.add('active')
     from.classList.remove('active')
@@ -105,10 +105,10 @@ const transitions = {
   fadeToDark(from, to, done) {
     const overlay = createOverlay('#2C2420')
     const tl = gsap.timeline({ onComplete: () => { overlay.remove(); done() } })
-    tl.to(overlay, { opacity: 1, duration: 0.4 })
+    tl.to(overlay, { opacity: 1, duration: 0.8 })
     tl.set(from, { opacity: 0 })
     tl.set(to, { opacity: 1 })
-    tl.to(overlay, { opacity: 0, duration: 0.6, delay: 0.1 })
+    tl.to(overlay, { opacity: 0, duration: 1.2, delay: 0.2 })
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -117,10 +117,10 @@ const transitions = {
   flashReveal(from, to, done) {
     const overlay = createOverlay('#E8D5A3')
     const tl = gsap.timeline({ onComplete: () => { overlay.remove(); done() } })
-    tl.to(overlay, { opacity: 1, duration: 0.15 })
+    tl.to(overlay, { opacity: 1, duration: 0.3 })
     tl.set(from, { opacity: 0 })
     tl.set(to, { opacity: 1 })
-    tl.to(overlay, { opacity: 0, duration: 0.8, ease: 'power2.out' })
+    tl.to(overlay, { opacity: 0, duration: 1.5, ease: 'power2.out' })
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -129,8 +129,8 @@ const transitions = {
   dissolveDown(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0, y: '0%' })
-    tl.to(from, { opacity: 0, y: '5%', duration: 1, ease: 'power1.inOut' })
-    tl.to(to, { opacity: 1, duration: 1, ease: 'power1.inOut' }, '-=0.7')
+    tl.to(from, { opacity: 0, y: '5%', duration: 1.8, ease: 'power2.inOut' })
+    tl.to(to, { opacity: 1, duration: 1.8, ease: 'power2.inOut' }, '-=1.2')
     tl.set(from, { y: '0%', opacity: 0 })
     to.classList.add('active')
     from.classList.remove('active')
@@ -140,18 +140,18 @@ const transitions = {
   fadeScale(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0, scale: 1.05 })
-    tl.to(from, { opacity: 0, duration: 0.6, ease: 'power2.inOut' })
-    tl.to(to, { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, '-=0.4')
+    tl.to(from, { opacity: 0, duration: 1.2, ease: 'power2.inOut' })
+    tl.to(to, { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' }, '-=0.8')
     to.classList.add('active')
     from.classList.remove('active')
   },
 
-  // Quick reveal (fast, suspenseful)
+  // Quick reveal (make it slightly slower but still fast)
   quickReveal(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0 })
-    tl.to(from, { opacity: 0, duration: 0.3, ease: 'power3.inOut' })
-    tl.to(to, { opacity: 1, duration: 0.4, ease: 'power3.out' }, '-=0.1')
+    tl.to(from, { opacity: 0, duration: 0.6, ease: 'power3.inOut' })
+    tl.to(to, { opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.3')
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -160,8 +160,8 @@ const transitions = {
   slowWarmFade(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0 })
-    tl.to(from, { opacity: 0, duration: 1.2, ease: 'power1.inOut' })
-    tl.to(to, { opacity: 1, duration: 1.2, ease: 'power1.inOut' }, '-=0.8')
+    tl.to(from, { opacity: 0, duration: 2.0, ease: 'power2.inOut' })
+    tl.to(to, { opacity: 1, duration: 2.0, ease: 'power2.inOut' }, '-=1.4')
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -170,10 +170,10 @@ const transitions = {
   fadeDarkGolden(from, to, done) {
     const overlay = createOverlay('#2C2420')
     const tl = gsap.timeline({ onComplete: () => { overlay.remove(); done() } })
-    tl.to(overlay, { opacity: 1, duration: 0.6 })
+    tl.to(overlay, { opacity: 1, duration: 1.0 })
     tl.set(from, { opacity: 0 })
     tl.set(to, { opacity: 1 })
-    tl.to(overlay, { opacity: 0, duration: 1, ease: 'power2.out', delay: 0.2 })
+    tl.to(overlay, { opacity: 0, duration: 1.5, ease: 'power2.out', delay: 0.3 })
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -183,10 +183,10 @@ const transitions = {
     const overlay = createOverlay('#C8A24E')
     overlay.style.opacity = '0'
     const tl = gsap.timeline({ onComplete: () => { overlay.remove(); done() } })
-    tl.to(overlay, { opacity: 0.15, duration: 0.4 })
-    tl.to(from, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, '-=0.2')
-    tl.to(to, { opacity: 1, duration: 0.8, ease: 'power2.inOut' }, '-=0.6')
-    tl.to(overlay, { opacity: 0, duration: 0.6 })
+    tl.to(overlay, { opacity: 0.15, duration: 0.8 })
+    tl.to(from, { opacity: 0, duration: 1.5, ease: 'power2.inOut' }, '-=0.4')
+    tl.to(to, { opacity: 1, duration: 1.5, ease: 'power2.inOut' }, '-=1.0')
+    tl.to(overlay, { opacity: 0, duration: 1.0 })
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -195,10 +195,10 @@ const transitions = {
   goldenBurst(from, to, done) {
     const overlay = createOverlay('#E8D5A3')
     const tl = gsap.timeline({ onComplete: () => { overlay.remove(); done() } })
-    tl.to(overlay, { opacity: 1, duration: 0.2 })
+    tl.to(overlay, { opacity: 1, duration: 0.4 })
     tl.set(from, { opacity: 0 })
     tl.set(to, { opacity: 1 })
-    tl.to(overlay, { opacity: 0, duration: 1.2, ease: 'power2.out', delay: 0.3 })
+    tl.to(overlay, { opacity: 0, duration: 2.0, ease: 'power2.out', delay: 0.4 })
     to.classList.add('active')
     from.classList.remove('active')
   },
@@ -207,8 +207,8 @@ const transitions = {
   slowWarmDissolve(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0 })
-    tl.to(from, { opacity: 0, duration: 1.5, ease: 'power1.inOut' })
-    tl.to(to, { opacity: 1, duration: 1.5, ease: 'power1.inOut' }, '-=1')
+    tl.to(from, { opacity: 0, duration: 2.5, ease: 'power2.inOut' })
+    tl.to(to, { opacity: 1, duration: 2.5, ease: 'power2.inOut' }, '-=1.5')
     to.classList.add('active')
     from.classList.remove('active')
   }

@@ -50,12 +50,39 @@ export function renderScreens(container) {
 function renderHero(data, index) {
   const el = document.createElement('div')
   el.className = `screen screen-hero ${index === 0 ? 'active' : ''}`
+  
+  // Keep original image as fallback or placeholder
   el.style.backgroundImage = `url('${data.background}')`
 
+  let videoHTML = ''
+  if (data.youtubeId) {
+    // Autoplay requires mute=1.
+    // modestbranding=1, controls=0, rel=0 to hide youtube UI.
+    // loop=1 and playlist=[id] for continuous looping.
+    const ytUrl = `https://www.youtube.com/embed/${data.youtubeId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${data.youtubeId}&playsinline=1`
+    videoHTML = `
+      <div class="hero-video-bg">
+        <iframe src="${ytUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    `
+  } else if (data.video) {
+    videoHTML = `
+      <div class="hero-video-bg">
+        <video src="${data.video}" autoplay loop muted playsinline></video>
+      </div>
+    `
+  }
+
   el.innerHTML = `
-    <h1 class="hero-title">${data.title}</h1>
-    <p class="hero-subtitle">${data.subtitle}</p>
-    <span class="hero-scroll-hint">↓ Scroll to begin</span>
+    ${videoHTML}
+    <div class="hero-content">
+      <p class="hero-subtitle">${data.subtitle}</p>
+      <h1 class="hero-title">${data.title}</h1>
+      <button class="hero-start-btn" onclick="window.scrollToScreen(1)">
+        <span class="btn-text">Start Story</span>
+        <span class="btn-icon">→</span>
+      </button>
+    </div>
   `
   return el
 }
