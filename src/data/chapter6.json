@@ -1,0 +1,34 @@
+{
+  "chapter": 6,
+  "chapterTitle": "The Sacred Gamelan",
+  "scenes": [
+    {
+      "scene": 1,
+      "text": "Mbok Rondo traveled to the palace of Kahuripan, where Prince Raden Inu had spent months searching for his lost bride, refusing to believe she was gone.",
+      "textPosition": "top-center",
+      "illustration": "/assets/img/chapter-6-scene-1.jpg",
+      "showTitle": true
+    },
+    {
+      "scene": 2,
+      "text": "When the prince heard her story, hope returned to his eyes. But the sacred gamelan could only be granted by the gods themselves.",
+      "textPosition": "right",
+      "illustration": "/assets/img/chapter-6-scene-2.jpg",
+      "showTitle": false
+    },
+    {
+      "scene": 3,
+      "text": "For seven days, the prince fasted and prayed at the edge of the forest. He surrendered his pride, his crown, and his power — asking only for the chance to save the woman he loved.",
+      "textPosition": "left",
+      "illustration": "/assets/img/chapter-6-scene-3.jpg",
+      "showTitle": false
+    },
+    {
+      "scene": 4,
+      "text": "On the seventh night, the heavens answered. A golden gamelan descended through the mist, glowing with divine light.",
+      "textPosition": "top-left",
+      "illustration": "/assets/img/chapter-6-scene-4.jpg",
+      "showTitle": false
+    }
+  ]
+}

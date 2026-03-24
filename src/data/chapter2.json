@@ -1,0 +1,27 @@
+{
+  "chapter": 2,
+  "chapterTitle": "The Prince's Proposal",
+  "scenes": [
+    {
+      "scene": 1,
+      "text": "From across the mountains, a young prince arrived at the gates of Daha. His name was Raden Inu Kertapati, crown prince of Kahuripan.",
+      "textPosition": "top-center",
+      "illustration": "/assets/img/chapter-2-scene-1.jpg",
+      "showTitle": true
+    },
+    {
+      "scene": 2,
+      "text": "When the prince saw Candra Kirana, his heart was decided. And the king, seeing the goodness in both of them, gave his blessing.",
+      "textPosition": "right",
+      "illustration": "/assets/img/chapter-2-scene-2.jpg",
+      "showTitle": false
+    },
+    {
+      "scene": 3,
+      "text": "The kingdom celebrated. But in the shadow of the festivities, one pair of eyes burned with envy.",
+      "textPosition": "left",
+      "illustration": "/assets/img/chapter-2-scene-3.jpg",
+      "showTitle": false
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "chapter": 5,
+  "chapterTitle": "The Secret at Night",
+  "scenes": [
+    {
+      "scene": 1,
+      "text": "Strange things began to happen. Each day when Mbok Rondo returned home, warm meals waited on the table and the house was spotless.",
+      "textPosition": "left",
+      "illustration": "/assets/img/chapter-5-scene-1.jpg",
+      "showTitle": true
+    },
+    {
+      "scene": 2,
+      "text": "Curiosity consumed her. One morning, she pretended to leave — but hid behind the wall, watching through a crack.",
+      "textPosition": "top-center",
+      "illustration": "/assets/img/chapter-5-scene-2.jpg",
+      "showTitle": false
+    },
+    {
+      "scene": 3,
+      "text": "What she saw took her breath away. A beautiful young woman emerged from the golden shell, moving gracefully through the kitchen — cooking, cleaning, caring for the home as if it were her own.",
+      "textPosition": "right",
+      "illustration": "/assets/img/chapter-5-scene-3.jpg",
+      "showTitle": false
+    },
+    {
+      "scene": 4,
+      "text": "\"I am Candra Kirana,\" she said softly. \"A curse turned me into the golden snail you found. It can only be broken by the melody of the sacred gamelan.\"",
+      "textPosition": "top-left",
+      "illustration": "/assets/img/chapter-5-scene-4.jpg",
+      "showTitle": false
+    }
+  ]
+}

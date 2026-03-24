@@ -1,0 +1,34 @@
+{
+  "chapter": 3,
+  "chapterTitle": "The Witch's Curse",
+  "scenes": [
+    {
+      "scene": 1,
+      "text": "Consumed by jealousy, Galuh Ajeng ventured deep into the forbidden forest, seeking a witch who traded in dark magic.",
+      "textPosition": "right",
+      "illustration": "/assets/img/chapter-3-scene-1.jpg",
+      "showTitle": true
+    },
+    {
+      "scene": 2,
+      "text": "\"Destroy her happiness,\" Galuh Ajeng whispered. The witch smiled, and the deal was made.",
+      "textPosition": "top-center",
+      "illustration": "/assets/img/chapter-3-scene-2.jpg",
+      "showTitle": false
+    },
+    {
+      "scene": 3,
+      "text": "Under a moonless sky, the witch cast her curse. Candra Kirana's body began to shrink, her skin hardened into a golden shell. She had become a small, glowing snail.",
+      "textPosition": "left",
+      "illustration": "/assets/img/chapter-3-scene-3.jpg",
+      "showTitle": false
+    },
+    {
+      "scene": 4,
+      "text": "The witch cast the golden snail into the river. \"This curse shall only break when you find the one who truly loves you,\" she whispered as the current carried it away into the darkness.",
+      "textPosition": "top-left",
+      "illustration": "/assets/img/chapter-3-scene-4.jpg",
+      "showTitle": false
+    }
+  ]
+}
