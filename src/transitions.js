@@ -10,6 +10,8 @@ export function transitionScenes(fromEl, toEl, onComplete) {
 
   if (isForward && fromIndex === 0) {
     effectName = 'closeToButton'
+  } else if (!isForward && toIndex === 0) {
+    effectName = 'openFromFavicon'
   }
 
   const transitionEffect = transitions[effectName] || transitions['crossfade']
@@ -78,5 +80,45 @@ const transitions = {
     tl.call(() => {
       from.classList.remove('active')
     })
+  },
+
+  // Open the hero screen from the favicon (circle expanding out)
+  openFromFavicon(from, to, done) {
+    const tl = gsap.timeline({ onComplete: done })
+    
+    // Calculate center of the Favicon button
+    let cx = '50%'
+    let cy = '40%'
+    const btnIcon = from.querySelector('.ending-favicon')
+    
+    if (btnIcon) {
+      const rect = btnIcon.getBoundingClientRect()
+      if (rect.width > 0) {
+        cx = `${Math.round(rect.left + rect.width / 2)}px`
+        cy = `${Math.round(rect.top + rect.height / 2)}px`
+      }
+    }
+    
+    to.classList.add('active')
+    
+    // Set initial states immediately at timeline position 0
+    // We animate 'to' (Hero) to grow out of 'from' (Ending Screen)
+    tl.set(from, { opacity: 1 }, 0)
+    tl.set(to, { opacity: 1, clipPath: `circle(0% at ${cx} ${cy})`, zIndex: 10 }, 0)
+    
+    // Start expanding 'to'
+    tl.to(to, { 
+      clipPath: `circle(150% at ${cx} ${cy})`, 
+      duration: 1.1, 
+      ease: 'power2.inOut' 
+    }, 0)
+    
+    // Cleanup
+    tl.set(to, { clipPath: 'none', zIndex: '' })
+    tl.set(from, { opacity: 0 }) // Fix bug: hide 'from' screen completely
+    tl.call(() => {
+      from.classList.remove('active')
+    })
   }
 }
+

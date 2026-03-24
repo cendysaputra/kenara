@@ -295,6 +295,23 @@ body {
   background-color: var(--canvas);
 }
 
+.ending-favicon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: transform 0.3s ease;
+}
+
+.ending-favicon img {
+  width: 56px;
+  height: auto;
+}
+
+.ending-favicon:hover {
+  transform: scale(1.1);
+}
+
 .ending-text {
   font-family: var(--font-body);
   font-style: italic;

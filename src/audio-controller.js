@@ -9,7 +9,7 @@ export function initAudio() {
   if (!audioEl || !toggleBtn) return
 
   // Start muted
-  audioEl.volume = 0.3
+  audioEl.volume = 1
   audioEl.muted = true
   toggleBtn.classList.add('muted')
 
@@ -30,6 +30,17 @@ export function initAudio() {
       icon.textContent = '♪'
     }
   })
+
+  // Expose play function to global for inline onclick
+  window.playThemeAudio = () => {
+    if (audioEl && isMuted) {
+      isMuted = false
+      audioEl.muted = false
+      audioEl.play().catch(() => {})
+      toggleBtn.classList.remove('muted')
+      icon.textContent = '♪'
+    }
+  }
 }
 
 export function setAudioVolume(volume) {

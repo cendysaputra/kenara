@@ -80,7 +80,7 @@ function renderHero(data, index) {
     <div class="hero-content">
       <p class="hero-subtitle">${data.subtitle}</p>
       <h1 class="hero-title">${data.title}</h1>
-      <button class="hero-start-btn" onclick="window.scrollToScreen(1)">
+      <button class="hero-start-btn" onclick="window.scrollToScreen(1); if(window.playThemeAudio) window.playThemeAudio();">
         <span class="btn-text">Start Story</span>
         <span class="btn-icon">→</span>
       </button>
@@ -125,6 +125,9 @@ function renderEnding(data, index) {
   const currentYear = new Date().getFullYear()
 
   el.innerHTML = `
+    <button class="ending-favicon" onclick="window.scrollToScreen(0)" aria-label="Back to start">
+      <img src="/assets/img/favicon.png" alt="Favicon" />
+    </button>
     <p class="ending-text">${data.text}</p>
     <p class="ending-credit">${data.credit}</p>
     <div class="ending-copyright">&copy; ${currentYear} Cendy Saputra</div>
