@@ -8,6 +8,7 @@ export function transitionScenes(fromEl, toEl, onComplete) {
   // Determine transition type based on story progression
   let effectName = 'crossfade'
 
+  /* 
   if (isForward) {
     switch (toIndex) {
       case 5: effectName = 'slowFadeDark'; break;       // 1.3 -> 1.4
@@ -27,6 +28,7 @@ export function transitionScenes(fromEl, toEl, onComplete) {
       case 33: effectName = 'slowWarmDissolve'; break;  // 7.3 -> 7.4
     }
   }
+  */
 
   const transitionEffect = transitions[effectName] || transitions['crossfade']
 
