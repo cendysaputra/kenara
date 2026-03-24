@@ -171,7 +171,8 @@ body {
   border-color: var(--dark-scene);
 }
 
-.hero-copyright {
+.hero-copyright,
+.ending-copyright {
   position: absolute;
   bottom: 24px;
   left: 5%;
@@ -278,7 +279,7 @@ body {
   top: 50%;
   right: 5%;
   transform: translateY(-50%);
-  text-align: left;
+  text-align: right;
 }
 
 .screen-scene[data-text-position="top-left"] .scene-text {

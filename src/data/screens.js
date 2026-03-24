@@ -20,7 +20,7 @@ export const screens = [
     type: "scene",
     chapter: 1,
     scene: 1,
-    text: "Long ago, in the heart of East Java, there stood a kingdom called Daha — prosperous, peaceful, and loved by its people.",
+    text: "Long ago, in the heart of East Java, there stood a kingdom called Daha prosperous, peaceful, and loved by its people.",
     textPosition: "top-center",
     background: "/assets/img/chapter-1-scene-1.jpg"
   },
@@ -36,7 +36,7 @@ export const screens = [
     type: "scene",
     chapter: 1,
     scene: 3,
-    text: "He had two daughters. Candra Kirana, the younger — gentle, kind, adored by everyone. And Galuh Ajeng, the elder — beautiful, but with a heart that always wanted more.",
+    text: "He had two daughters. Candra Kirana, the younger, gentle, kind, adored by everyone. And Galuh Ajeng, the elder, beautiful, but with a heart that always wanted more.",
     textPosition: "right",
     background: "/assets/img/chapter-1-scene-3.jpg"
   },
@@ -140,7 +140,7 @@ export const screens = [
     type: "scene",
     chapter: 4,
     scene: 2,
-    text: "One afternoon, something unusual caught in her net — a small snail, glowing faintly with golden light. She had never seen anything like it.",
+    text: "One afternoon, something unusual caught in her net: a small snail, glowing faintly with golden light. She had never seen anything like it.",
     textPosition: "left",
     background: "/assets/img/chapter-4-scene-2.jpg"
   },
@@ -172,7 +172,7 @@ export const screens = [
     type: "scene",
     chapter: 5,
     scene: 2,
-    text: "Curiosity consumed her. One morning, she pretended to leave — but hid behind the wall, watching through a crack.",
+    text: "Curiosity consumed her. One morning, she pretended to leave, but hid behind the wall, watching through a crack.",
     textPosition: "top-center",
     background: "/assets/img/chapter-5-scene-2.jpg"
   },
@@ -180,7 +180,7 @@ export const screens = [
     type: "scene",
     chapter: 5,
     scene: 3,
-    text: "What she saw took her breath away. A beautiful young woman emerged from the golden shell, moving gracefully through the kitchen — cooking, cleaning, caring for the home as if it were her own.",
+    text: "What she saw took her breath away. A beautiful young woman emerged from the golden shell, moving gracefully through the kitchen, cooking, cleaning, caring for the home as if it were her own.",
     textPosition: "right",
     background: "/assets/img/chapter-5-scene-3.jpg"
   },
@@ -220,7 +220,7 @@ export const screens = [
     type: "scene",
     chapter: 6,
     scene: 3,
-    text: "For seven days, the prince fasted and prayed at the edge of the forest. He surrendered his pride, his crown, and his power — asking only for the chance to save the woman he loved.",
+    text: "For seven days, the prince fasted and prayed at the edge of the forest. He surrendered his pride, his crown, and his power, asking only for the chance to save the woman he loved.",
     textPosition: "left",
     background: "/assets/img/chapter-6-scene-3.jpg"
   },
@@ -252,7 +252,7 @@ export const screens = [
     type: "scene",
     chapter: 7,
     scene: 2,
-    text: "Raden Inu began to play. The melody was soft yet powerful — sorrowful yet full of hope. It echoed through the walls, through the trees, through the river where Candra Kirana had once drifted in darkness.",
+    text: "Raden Inu began to play. The melody was soft yet powerful, sorrowful yet full of hope. It echoed through the walls, through the trees, through the river where Candra Kirana had once drifted in darkness.",
     textPosition: "top-center",
     background: "/assets/img/chapter-7-scene-2.jpg"
   },
@@ -260,7 +260,7 @@ export const screens = [
     type: "scene",
     chapter: 7,
     scene: 3,
-    text: "The golden shell began to glow, then cracked open. Light poured out like sunrise. Where the snail once lay, Candra Kirana now stood — radiant, whole, and free.",
+    text: "The golden shell began to glow, then cracked open. Light poured out like sunrise. Where the snail once lay, Candra Kirana now stood radiant, whole, and free.",
     textPosition: "left",
     background: "/assets/img/chapter-7-scene-3.jpg"
   },
@@ -268,7 +268,7 @@ export const screens = [
     type: "scene",
     chapter: 7,
     scene: 4,
-    text: "Their eyes met. No words were needed. The kingdom rejoiced, Mbok Rondo was welcomed as family, and the tale of the golden snail became a story passed down for generations — a reminder that love, kindness, and patience can break even the darkest of curses.",
+    text: "Their eyes met. No words were needed. The kingdom rejoiced, Mbok Rondo was welcomed as family, and the tale of the golden snail became a story passed down for generations, a reminder that love, kindness, and patience can break even the darkest of curses.",
     textPosition: "top-center",
     background: "/assets/img/chapter-7-scene-4.jpg"
   },
@@ -276,7 +276,7 @@ export const screens = [
   // ENDING
   {
     type: "ending",
-    text: "And so the tale lives on — passed down from one generation to the next.",
+    text: "And so the tale lives on, passed down from one generation to the next.",
     credit: "A project by Cendy Saputra"
   }
 ]

@@ -122,9 +122,12 @@ function renderEnding(data, index) {
   const el = document.createElement('div')
   el.className = 'screen screen-ending'
 
+  const currentYear = new Date().getFullYear()
+
   el.innerHTML = `
     <p class="ending-text">${data.text}</p>
     <p class="ending-credit">${data.credit}</p>
+    <div class="ending-copyright">&copy; ${currentYear} Cendy Saputra</div>
   `
   return el
 }

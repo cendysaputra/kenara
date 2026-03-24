@@ -4,7 +4,7 @@
   "scenes": [
     {
       "scene": 1,
-      "text": "Long ago, in the heart of East Java, there stood a kingdom called Daha — prosperous, peaceful, and loved by its people.",
+      "text": "Long ago, in the heart of East Java, there stood a kingdom called Daha prosperous, peaceful, and loved by its people.",
       "textPosition": "top-center",
       "illustration": "/assets/img/chapter-1-scene-1.jpg",
       "showTitle": true
@@ -18,7 +18,7 @@
     },
     {
       "scene": 3,
-      "text": "He had two daughters. Candra Kirana, the younger — gentle, kind, adored by everyone. And Galuh Ajeng, the elder — beautiful, but with a heart that always wanted more.",
+      "text": "He had two daughters. Candra Kirana, the younger gentle, kind, adored by everyone. And Galuh Ajeng, the elder beautiful, but with a heart that always wanted more.",
       "textPosition": "right",
       "illustration": "/assets/img/chapter-1-scene-3.jpg",
       "showTitle": false
