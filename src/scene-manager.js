@@ -8,6 +8,17 @@ export function getScreenData() {
   return screens
 }
 
+function isMobile() {
+  return window.innerWidth < 768
+}
+
+function getBackground(data) {
+  if (isMobile() && data.backgroundMobile) {
+    return data.backgroundMobile
+  }
+  return data.background
+}
+
 export function getChapterForScreenIndex(index) {
   const screen = screens[index]
   if (!screen) return null
@@ -52,7 +63,7 @@ function renderHero(data, index) {
   el.className = `screen screen-hero ${index === 0 ? 'active' : ''}`
   
   // Keep original image as fallback or placeholder
-  el.style.backgroundImage = `url('${data.background}')`
+  el.style.backgroundImage = `url('${getBackground(data)}')`
 
   let videoHTML = ''
   if (data.youtubeId) {
@@ -108,7 +119,7 @@ function renderScene(data, index) {
   el.dataset.chapter = data.chapter
   el.dataset.scene = data.scene
   el.dataset.textPosition = data.textPosition
-  el.style.backgroundImage = `url('${data.background}')`
+  el.style.backgroundImage = `url('${getBackground(data)}')`
 
   el.innerHTML = `
     <div class="scene-text">
@@ -134,3 +145,19 @@ function renderEnding(data, index) {
   `
   return el
 }
+
+let currentIsMobile = isMobile()
+
+window.addEventListener('resize', () => {
+  const nowMobile = isMobile()
+  if (nowMobile !== currentIsMobile) {
+    currentIsMobile = nowMobile
+    document.querySelectorAll('.screen-scene, .screen-hero').forEach(el => {
+      const index = parseInt(el.dataset.index)
+      const data = getScreenData()[index]
+      if (data) {
+        el.style.backgroundImage = `url('${getBackground(data)}')`
+      }
+    })
+  }
+})
