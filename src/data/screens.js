@@ -5,7 +5,7 @@ export const screens = [
     background: "/assets/img/cover-hero.jpg",
     backgroundMobile: "/assets/img/mb-cover-hero.jpg",
     // youtubeId: "LrZELjUukR0",
-    video: "/assets/img/kenara-hero.mp4",
+    video: "/assets/kenara-hero.mp4",
     title: "The Golden Shell",
     subtitle: "An Indonesian Fairy Tale"
   },
