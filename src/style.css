@@ -28,6 +28,11 @@ body {
   background-color: var(--canvas);
   color: var(--text-body);
   font-family: var(--font-body);
+  top: 0 !important;
+}
+
+body[data-translate-pending="true"] #story-container {
+  visibility: hidden;
 }
 
 /* STORY CONTAINER */
@@ -122,6 +127,7 @@ body {
   letter-spacing: 0.02em;
   line-height: 1.1;
   margin-bottom: 8px;
+  text-wrap: balance;
 }
 
 .hero-subtitle {
@@ -130,6 +136,7 @@ body {
   font-size: 24px;
   color: var(--text-body);
   margin-bottom: 12px;
+  text-wrap: balance;
 }
 
 .hero-start-btn {
@@ -228,6 +235,7 @@ body {
   color: var(--text-primary);
   letter-spacing: 0.02em;
   line-height: 1.2;
+  text-wrap: balance;
 }
 
 /* SCENE */
@@ -248,7 +256,7 @@ body {
 .scene-text {
   position: absolute;
   z-index: 10;
-  max-width: 480px;
+  width: min(32rem, calc(100vw - 4rem));
   padding: 24px;
 }
 
@@ -258,6 +266,20 @@ body {
   font-weight: 400;
   color: var(--text-body);
   line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.mobile-scroll-hint {
+  display: none;
+}
+
+@keyframes mobileHintPulse {
+  0%, 100% {
+    opacity: 0.28;
+  }
+  50% {
+    opacity: 0.75;
+  }
 }
 
 /* Text positions */
@@ -286,6 +308,19 @@ body {
   top: 8%;
   left: 5%;
   text-align: left;
+}
+
+.screen-scene[data-chapter="3"][data-scene="3"] .scene-text {
+  left: 1%;
+  width: min(28rem, calc(100vw - 6rem));
+}
+
+.screen-scene[data-chapter="7"][data-scene="4"] .scene-text {
+  width: min(56rem, calc(100vw - 6rem));
+}
+
+.screen-scene[data-chapter="7"][data-scene="2"] .scene-text {
+  width: min(50rem, calc(100vw - 7rem));
 }
 
 /* ENDING SCREEN */
@@ -319,6 +354,7 @@ body {
   color: var(--text-muted);
   max-width: 500px;
   line-height: 1.7;
+  text-wrap: pretty;
 }
 
 .ending-credit {
@@ -372,6 +408,10 @@ body {
   border: 1px solid var(--text-primary);
   color: var(--text-primary);
   width: 40px; height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  flex: 0 0 40px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   cursor: pointer;
   font-size: 14px;
@@ -381,6 +421,97 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 0.85;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+button *,
+.hero-start-btn,
+.hero-start-btn *,
+.ending-favicon,
+.ending-favicon * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus,
+button:focus-visible,
+.hero-start-btn:focus,
+.hero-start-btn:focus-visible,
+.ending-favicon:focus,
+.ending-favicon:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+#lang-btn {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.google-translate-anchor,
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+.goog-logo-link,
+.goog-te-gadget span,
+.goog-te-gadget-icon {
+  display: none !important;
+}
+
+body > .skiptranslate {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  font-size: 0 !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+button .goog-text-highlight,
+.hero-start-btn .goog-text-highlight,
+.ending-favicon .goog-text-highlight,
+#bottom-controls .goog-text-highlight {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+body[data-language="id"] .goog-text-highlight,
+body[data-language="id"] [style*="background-color: rgb(204, 204, 255)"],
+body[data-language="id"] [style*="background-color:#ccc"],
+body[data-language="id"] [style*="background-color: #ccc"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: inherit !important;
+}
+
+body[data-language="id"] font,
+body[data-language="id"] font font,
+body[data-language="id"] .screen font,
+body[data-language="id"] .screen font font {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body[data-language="id"] font[style*="background"],
+body[data-language="id"] font[style*="background-color"],
+body[data-language="id"] span[style*="background-color: rgb(204, 204, 255)"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 #audio-icon {
@@ -461,22 +592,34 @@ body.hero-active #bottom-controls button {
   .hero-title { font-size: 56px; }
   .chapter-card-title { font-size: 44px; }
   .scene-body { font-size: 18px; }
-  .scene-text { max-width: 400px; }
+  .scene-text { width: min(26rem, calc(100vw - 3rem)); }
 }
 
 @media (max-width: 767px) {
+  #progress-bar {
+    top: 0;
+    bottom: auto;
+    height: 3px;
+    z-index: 150;
+  }
+
+  .screen-hero,
+  .screen-scene {
+    background-position: center bottom;
+  }
   /* Scene text — always top, always left aligned */
   .screen-scene[data-text-position="top-center"] .scene-text,
   .screen-scene[data-text-position="left"] .scene-text,
   .screen-scene[data-text-position="right"] .scene-text,
   .screen-scene[data-text-position="top-left"] .scene-text {
-    top: 5%;
-    left: 16px;
-    right: 16px;
+    top: 40px;
+    left: 16px !important;
+    right: 16px !important;
     bottom: auto;
     transform: none;
     text-align: left;
-    max-width: 100%;
+    width: auto !important;
+    max-width: calc(100vw - 32px);
     padding: 0;
   }
 
@@ -513,41 +656,77 @@ body.hero-active #bottom-controls button {
 
   /* Chapter cards — left aligned */
   .screen-chapter-card {
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 60px 16px 0 16px;
-    text-align: left;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    text-align: center;
   }
 
   .chapter-card-title {
     font-size: 36px;
-    text-align: left;
+    text-align: center;
   }
 
   .chapter-card-label {
-    text-align: left;
+    text-align: center;
   }
 
   /* Ending — left aligned */
   .screen-ending {
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 60px 16px 0 16px;
-    text-align: left;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    text-align: center;
   }
 
   .ending-text {
-    font-size: 16px;
-    text-align: left;
+    font-size: 20px;
+    text-align: center;
   }
 
   .ending-credit {
-    text-align: left;
+    text-align: center;
+  }
+
+  .mobile-scroll-hint {
+    display: block;
+    position: absolute;
+    left: 16px;
+    bottom: 20px;
+    z-index: 12;
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(61, 43, 31, 0.72);
+    animation: mobileHintPulse 2.4s ease-in-out infinite;
+    pointer-events: none;
   }
 
   /* UI elements */
   #chapter-nav { display: none; }
   #bottom-controls { bottom: 16px; right: 16px; gap: 8px; }
-  #bottom-controls button { width: 36px; height: 36px; font-size: 12px; }
+  #bottom-controls button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    flex: 0 0 36px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1;
+  }
+  #lang-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    flex: 0 0 36px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border-radius: 50%;
+    line-height: 1;
+  }
   #audio-icon { font-size: 14px; }
 }

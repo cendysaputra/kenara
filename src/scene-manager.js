@@ -1,5 +1,14 @@
 import { screens } from './data/screens.js'
 
+const imageModules = import.meta.glob('../assets/img/*.{png,jpg,jpeg,webp,avif}', {
+  eager: true,
+  import: 'default'
+})
+
+const imageAssetMap = new Map(
+  Object.entries(imageModules).map(([path, assetUrl]) => [path.split('/').pop(), assetUrl])
+)
+
 export function getTotalScreens() {
   return screens.length
 }
@@ -12,11 +21,24 @@ function isMobile() {
   return window.innerWidth < 768
 }
 
-function getBackground(data) {
-  if (isMobile() && data.backgroundMobile) {
-    return data.backgroundMobile
+function resolveAssetUrl(assetPath) {
+  if (!assetPath) return null
+
+  const fileName = assetPath.split('/').pop()
+  return imageAssetMap.get(fileName) || assetPath
+}
+
+function assetExists(assetPath) {
+  if (!assetPath) return false
+  return imageAssetMap.has(assetPath.split('/').pop())
+}
+
+export function getBackgroundForScreen(data) {
+  if (isMobile() && data.backgroundMobile && assetExists(data.backgroundMobile)) {
+    return resolveAssetUrl(data.backgroundMobile)
   }
-  return data.background
+
+  return resolveAssetUrl(data.background)
 }
 
 export function getChapterForScreenIndex(index) {
@@ -63,7 +85,7 @@ function renderHero(data, index) {
   el.className = `screen screen-hero ${index === 0 ? 'active' : ''}`
   
   // Keep original image as fallback or placeholder
-  el.style.backgroundImage = `url('${getBackground(data)}')`
+  el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
 
   let videoHTML = ''
   if (data.youtubeId) {
@@ -119,12 +141,13 @@ function renderScene(data, index) {
   el.dataset.chapter = data.chapter
   el.dataset.scene = data.scene
   el.dataset.textPosition = data.textPosition
-  el.style.backgroundImage = `url('${getBackground(data)}')`
+  el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
 
   el.innerHTML = `
     <div class="scene-text">
       <p class="scene-body">${data.text}</p>
     </div>
+    <div class="mobile-scroll-hint" aria-hidden="true">Scroll down</div>
   `
   return el
 }
@@ -136,7 +159,7 @@ function renderEnding(data, index) {
   const currentYear = new Date().getFullYear()
 
   el.innerHTML = `
-    <button class="ending-favicon" onclick="window.scrollToScreen(0)" aria-label="Back to start">
+    <button class="ending-favicon" onclick="if(window.stopThemeAudio) window.stopThemeAudio(); window.scrollToScreen(0)" aria-label="Back to start">
       <img src="/assets/img/favicon.png" alt="Favicon" />
     </button>
     <p class="ending-text">${data.text}</p>
@@ -156,7 +179,7 @@ window.addEventListener('resize', () => {
       const index = parseInt(el.dataset.index)
       const data = getScreenData()[index]
       if (data) {
-        el.style.backgroundImage = `url('${getBackground(data)}')`
+        el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
       }
     })
   }

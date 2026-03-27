@@ -3,8 +3,9 @@ import { getChapterForScreenIndex, getTotalScreens } from './scene-manager.js'
 let currentScreen = 0
 let lastScrollTime = 0
 
-export function initScrollController(onScreenChange) {
+export function initScrollController(onScreenChange, initialScreen = 0) {
   const totalScreens = getTotalScreens()
+  currentScreen = Math.min(Math.max(initialScreen, 0), totalScreens - 1)
 
   // Ensure body doesn't actually scroll natively
   document.documentElement.style.overflow = 'hidden'
@@ -73,8 +74,8 @@ export function initScrollController(onScreenChange) {
   }, { passive: false })
   
   // Initial UI setup
-  updateProgressBar(0)
-  updateChapterNav(getChapterForScreenIndex(0))
+  updateProgressBar(currentScreen / (totalScreens - 1))
+  updateChapterNav(getChapterForScreenIndex(currentScreen))
   
   // Provide a global goto method for the chapter dots
   window.scrollToScreen = (index) => {

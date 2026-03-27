@@ -30,6 +30,7 @@ vite.config.ts.timestamp-*
 # Custom ignores
 agent/
 backup-img/
+assets/
 
 # Media
 *.mp4

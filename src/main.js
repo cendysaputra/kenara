@@ -3,10 +3,37 @@ import { renderScreens, getTotalScreens, getChapterForScreenIndex, getFirstScree
 import { initScrollController } from './scroll-controller.js'
 import { transitionScenes } from './transitions.js'
 import { initAudio } from './audio-controller.js'
+import { preloadInitialScenes, preloadNearbyScenes } from './image-preloader.js'
+import { initTranslate } from './translate-controller.js'
+
+const SCREEN_STORAGE_KEY = 'kenara-screen-index'
+
+function getSavedScreenIndex(totalScreens) {
+  const rawValue = Number.parseInt(localStorage.getItem(SCREEN_STORAGE_KEY) ?? '0', 10)
+  if (Number.isNaN(rawValue)) return 0
+  return Math.min(Math.max(rawValue, 0), totalScreens - 1)
+}
+
+function saveScreenIndex(index) {
+  localStorage.setItem(SCREEN_STORAGE_KEY, String(index))
+}
+
+function applyInitialScreenState(index) {
+  const screens = container.querySelectorAll('.screen')
+
+  screens.forEach((screen, screenIndex) => {
+    screen.classList.toggle('active', screenIndex === index)
+  })
+
+  document.body.classList.toggle('hero-active', index === 0)
+}
 
 // 1. Render all screens (hero + chapter cards + scenes + ending)
 const container = document.getElementById('story-container')
 const totalScreens = renderScreens(container)
+const savedScreenIndex = getSavedScreenIndex(totalScreens)
+applyInitialScreenState(savedScreenIndex)
+saveScreenIndex(savedScreenIndex)
 
 // 2. Render chapter nav dots (7 chapters)
 const nav = document.getElementById('chapter-nav')
@@ -17,9 +44,6 @@ for (let i = 1; i <= 7; i++) {
   dot.setAttribute('aria-label', `Chapter ${i}`)
   nav.appendChild(dot)
 }
-
-// Set initial state
-document.body.classList.add('hero-active')
 
 // 3. Initialize scroll controller
 initScrollController((fromIndex, toIndex) => {
@@ -36,7 +60,10 @@ initScrollController((fromIndex, toIndex) => {
   if (fromEl && toEl) {
     transitionScenes(fromEl, toEl)
   }
-})
+
+  saveScreenIndex(toIndex)
+  preloadNearbyScenes(toIndex, 2)
+}, savedScreenIndex)
 
 // 4. Chapter dot click navigation
 document.querySelectorAll('#chapter-nav .dot').forEach(dot => {
@@ -51,17 +78,11 @@ document.querySelectorAll('#chapter-nav .dot').forEach(dot => {
 
 // 5. Initialize audio
 initAudio()
+initTranslate()
 
-// 6. Preload first few backgrounds
-const preloadImages = [
-  '/assets/img/cover-hero.jpg',
-  '/assets/img/chapter-1-scene-1.jpg',
-  '/assets/img/chapter-1-scene-2.jpg'
-]
-preloadImages.forEach(src => {
-  const img = new Image()
-  img.src = src
-})
+// 6. Preload initial visuals and keep the next scenes warm
+preloadInitialScenes(4)
+preloadNearbyScenes(savedScreenIndex, 2)
 
 // 7. Disable zooming (ctrl + wheel / ctrl + keys)
 document.addEventListener('wheel', (e) => {

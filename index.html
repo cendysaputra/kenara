@@ -24,14 +24,14 @@
 
   <!-- Bottom right controls -->
   <div id="bottom-controls">
-    <button id="audio-toggle" aria-label="Toggle sound">
+    <button id="audio-toggle" aria-label="Toggle sound" class="notranslate" translate="no">
       <span id="audio-icon">♪</span>
     </button>
     <div class="info-wrapper">
-      <button id="info-btn" aria-label="Information">i</button>
+      <button id="info-btn" aria-label="Information" class="notranslate" translate="no">i</button>
       <div class="info-tooltip">Create by Cendy Saputra</div>
     </div>
-    <button id="lang-btn" aria-label="Toggle language">EN</button>
+    <button id="lang-btn" aria-label="Toggle language" class="notranslate" translate="no">EN</button>
   </div>
 
   <!-- Progress bar -->
@@ -53,6 +53,8 @@
   <audio id="bg-audio" loop preload="auto">
     <source src="/assets/kenara-sound.mp3" type="audio/mpeg">
   </audio>
+
+  <div id="google_translate_element" class="google-translate-anchor" aria-hidden="true"></div>
 
   <script type="module" src="/src/main.js"></script>
 </body>
