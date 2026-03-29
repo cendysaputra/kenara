@@ -144,6 +144,12 @@ export function initTranslate() {
     }
 
     applyGoogleTranslateCookie(nextLanguage)
+    // Simpan layar aktif sebelum reload.
+    const currentScreen = document.querySelector('.screen.active')
+    if (currentScreen) {
+      const screenIndex = Array.from(document.querySelectorAll('.screen')).indexOf(currentScreen)
+      localStorage.setItem('kenara-screen-index', String(screenIndex))
+    }
     window.location.reload()
   })
 }

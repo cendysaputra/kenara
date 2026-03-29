@@ -3,6 +3,8 @@ let isMuted = true
 let wantsPlayback = false
 let userStopped = false
 let playbackRetryId = null
+let playbackRequestId = 0
+let audioButtons = []
 
 const AUDIO_STATE_KEY = 'kenara-audio-state'
 
@@ -40,35 +42,65 @@ function clearPlaybackRetry() {
   }
 }
 
-function updateAudioUi(toggleBtn, icon) {
-  toggleBtn.classList.toggle('muted', isMuted)
-  icon.textContent = '♪'
+function pauseForHiddenPage() {
+  if (!audioEl) return
+
+  playbackRequestId += 1
+  clearPlaybackRetry()
+  audioEl.pause()
+  audioEl.muted = true
+  isMuted = true
+  updateAudioUi()
+  syncAudioState()
 }
 
-function attemptPlayback(toggleBtn, icon) {
-  if (!audioEl || !wantsPlayback || userStopped || isHeroActive()) {
+function getButtonIcon(button) {
+  return button.querySelector('[data-audio-icon]')
+}
+
+function updateAudioUi() {
+  audioButtons.forEach((button) => {
+    button.classList.toggle('muted', isMuted)
+
+    const icon = getButtonIcon(button)
+    if (icon) {
+      icon.textContent = '\u266A'
+    }
+  })
+}
+
+function attemptPlayback(forceOnHero = false) {
+  if (!audioEl || !wantsPlayback || userStopped || (!forceOnHero && isHeroActive())) {
     return
   }
 
+  const requestId = ++playbackRequestId
   audioEl.muted = false
 
   audioEl.play()
     .then(() => {
+      if (requestId !== playbackRequestId || !wantsPlayback || userStopped) {
+        audioEl.pause()
+        audioEl.muted = true
+        return
+      }
+
       isMuted = false
-      updateAudioUi(toggleBtn, icon)
+      updateAudioUi()
       syncAudioState()
     })
     .catch(() => {
       isMuted = true
       audioEl.muted = true
-      updateAudioUi(toggleBtn, icon)
+      updateAudioUi()
       syncAudioState()
     })
 }
 
-function stopAudio(toggleBtn, icon, resetTime = true) {
+function stopAudio(resetTime = true) {
   if (!audioEl) return
 
+  playbackRequestId += 1
   clearPlaybackRetry()
   audioEl.pause()
   if (resetTime) {
@@ -76,7 +108,7 @@ function stopAudio(toggleBtn, icon, resetTime = true) {
   }
   isMuted = true
   audioEl.muted = true
-  updateAudioUi(toggleBtn, icon)
+  updateAudioUi()
   syncAudioState()
 }
 
@@ -89,7 +121,7 @@ function restoreCurrentTime(savedState) {
     try {
       audioEl.currentTime = savedState.currentTime
     } catch {
-      // Ignore until metadata is ready.
+      // Tunggu metadata siap.
     }
   }
 
@@ -103,10 +135,9 @@ function restoreCurrentTime(savedState) {
 
 export function initAudio() {
   audioEl = document.getElementById('bg-audio')
-  const toggleBtn = document.getElementById('audio-toggle')
-  const icon = document.getElementById('audio-icon')
+  audioButtons = Array.from(document.querySelectorAll('[data-audio-toggle]'))
 
-  if (!audioEl || !toggleBtn || !icon) return
+  if (!audioEl || audioButtons.length === 0) return
 
   const savedState = readAudioState()
 
@@ -118,14 +149,14 @@ export function initAudio() {
   isMuted = true
 
   restoreCurrentTime(savedState)
-  updateAudioUi(toggleBtn, icon)
+  updateAudioUi()
 
   if (isHeroActive()) {
     wantsPlayback = false
     userStopped = false
-    stopAudio(toggleBtn, icon)
+    stopAudio()
   } else if (wantsPlayback && !userStopped) {
-    const tryResume = () => attemptPlayback(toggleBtn, icon)
+    const tryResume = () => attemptPlayback()
     tryResume()
     audioEl.addEventListener('canplay', tryResume)
     window.addEventListener('pageshow', tryResume)
@@ -133,24 +164,36 @@ export function initAudio() {
     syncAudioState()
   }
 
-  toggleBtn.addEventListener('click', () => {
-    if (!isMuted && wantsPlayback) {
-      wantsPlayback = false
-      userStopped = true
-      stopAudio(toggleBtn, icon)
-      return
-    }
+  audioButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (wantsPlayback && !userStopped) {
+        wantsPlayback = false
+        userStopped = true
+        stopAudio()
+        return
+      }
 
-    userStopped = false
-    wantsPlayback = true
-    attemptPlayback(toggleBtn, icon)
+      userStopped = false
+      wantsPlayback = true
+      attemptPlayback(true)
+    })
   })
 
   audioEl.addEventListener('timeupdate', syncAudioState)
   audioEl.addEventListener('pause', syncAudioState)
   audioEl.addEventListener('play', syncAudioState)
-  window.addEventListener('beforeunload', syncAudioState)
-  window.addEventListener('pagehide', syncAudioState)
+  window.addEventListener('beforeunload', () => pauseForHiddenPage())
+  window.addEventListener('pagehide', () => pauseForHiddenPage())
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      pauseForHiddenPage()
+      return
+    }
+
+    if (document.visibilityState === 'visible' && wantsPlayback && !userStopped && !isHeroActive()) {
+      attemptPlayback()
+    }
+  })
 
   function requestPlaybackFromUi() {
     userStopped = false
@@ -166,7 +209,7 @@ export function initAudio() {
       }
 
       playbackRetryId = null
-      attemptPlayback(toggleBtn, icon)
+      attemptPlayback()
     }
 
     tryStart()
@@ -179,7 +222,7 @@ export function initAudio() {
   window.stopThemeAudio = () => {
     wantsPlayback = false
     userStopped = true
-    stopAudio(toggleBtn, icon)
+    stopAudio()
   }
 }
 

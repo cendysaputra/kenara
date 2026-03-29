@@ -83,25 +83,22 @@ export function renderScreens(container) {
 function renderHero(data, index) {
   const el = document.createElement('div')
   el.className = `screen screen-hero ${index === 0 ? 'active' : ''}`
-  
-  // Keep original image as fallback or placeholder
+
+  // Gambar tetap jadi fallback.
   el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
 
   let videoHTML = ''
-  if (data.youtubeId) {
-    // Autoplay requires mute=1.
-    // modestbranding=1, controls=0, rel=0 to hide youtube UI.
-    // loop=1 and playlist=[id] for continuous looping.
+  if (data.video) {
+    videoHTML = `
+      <div class="hero-video-bg">
+        <video src="${data.video}" autoplay loop muted playsinline></video>
+      </div>
+    `
+  } else if (data.youtubeId) {
     const ytUrl = `https://www.youtube.com/embed/${data.youtubeId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${data.youtubeId}&playsinline=1`
     videoHTML = `
       <div class="hero-video-bg">
         <iframe src="${ytUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </div>
-    `
-  } else if (data.video) {
-    videoHTML = `
-      <div class="hero-video-bg">
-        <video src="${data.video}" autoplay loop muted playsinline></video>
       </div>
     `
   }
@@ -157,10 +154,11 @@ function renderEnding(data, index) {
   el.className = 'screen screen-ending'
 
   const currentYear = new Date().getFullYear()
+  const faviconUrl = resolveAssetUrl('/assets/img/favicon.png')
 
   el.innerHTML = `
     <button class="ending-favicon" onclick="if(window.stopThemeAudio) window.stopThemeAudio(); window.scrollToScreen(0)" aria-label="Back to start">
-      <img src="/assets/img/favicon.png" alt="Favicon" />
+      <img src="${faviconUrl}" alt="Favicon" />
     </button>
     <p class="ending-text">${data.text}</p>
     <p class="ending-credit">${data.credit}</p>

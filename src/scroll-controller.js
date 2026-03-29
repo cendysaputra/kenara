@@ -7,7 +7,7 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
   const totalScreens = getTotalScreens()
   currentScreen = Math.min(Math.max(initialScreen, 0), totalScreens - 1)
 
-  // Ensure body doesn't actually scroll natively
+  // Matikan scroll bawaan browser.
   document.documentElement.style.overflow = 'hidden'
   document.documentElement.style.height = '100%'
   document.body.style.overflow = 'hidden'
@@ -16,10 +16,10 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
   let touchStartY = 0
   
   function navigate(direction) {
-    // Prevent scrolling past hero screen. Must use the start button.
+    // Dari hero, lanjut lewat tombol start.
     if (currentScreen === 0 && direction > 0) return
 
-    // Debounce to ensure 1 scroll = 1 section (lock for 1500ms for slower transitions)
+    // Satu scroll pindah satu layar.
     const now = Date.now()
     if (now - lastScrollTime < 1500) return
     lastScrollTime = now
@@ -41,15 +41,14 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
     }
   }
 
-  // Wheel listener
+  // Scroll mouse.
   window.addEventListener('wheel', (e) => {
-    // Determine direction (+1 for down/next, -1 for up/prev)
     if (Math.abs(e.deltaY) > 20) {
       navigate(e.deltaY > 0 ? 1 : -1)
     }
   }, { passive: false })
 
-  // Touch listener
+  // Swipe layar.
   window.addEventListener('touchstart', (e) => {
     touchStartY = e.changedTouches[0].screenY
   }, { passive: false })
@@ -57,12 +56,12 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
   window.addEventListener('touchend', (e) => {
     const touchEndY = e.changedTouches[0].screenY
     const deltaY = touchStartY - touchEndY
-    if (Math.abs(deltaY) > 50) { // Threshold for swipe
+    if (Math.abs(deltaY) > 50) {
       navigate(deltaY > 0 ? 1 : -1)
     }
   }, { passive: false })
 
-  // Keyboard arrows
+  // Tombol keyboard.
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
       e.preventDefault()
@@ -73,16 +72,16 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
     }
   }, { passive: false })
   
-  // Initial UI setup
+  // Set UI awal.
   updateProgressBar(currentScreen / (totalScreens - 1))
   updateChapterNav(getChapterForScreenIndex(currentScreen))
   
-  // Provide a global goto method for the chapter dots
+  // Dipakai tombol chapter.
   window.scrollToScreen = (index) => {
     if (index === currentScreen || index < 0 || index >= totalScreens) return
     const prev = currentScreen
     currentScreen = index
-    lastScrollTime = Date.now() // reset debounce
+    lastScrollTime = Date.now()
     onScreenChange(prev, currentScreen)
     updateProgressBar(currentScreen / (totalScreens - 1))
     updateChapterNav(getChapterForScreenIndex(currentScreen))

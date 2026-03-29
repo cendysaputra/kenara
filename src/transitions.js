@@ -5,7 +5,6 @@ export function transitionScenes(fromEl, toEl, onComplete) {
   const toIndex = parseInt(toEl.dataset.index)
   const isForward = toIndex > fromIndex
 
-  // Determine transition type
   let effectName = 'crossfade'
 
   if (isForward && fromIndex === 0) {
@@ -21,7 +20,6 @@ export function transitionScenes(fromEl, toEl, onComplete) {
   })
 }
 
-// Helper: create color overlay
 function createOverlay(color) {
   const overlay = document.createElement('div')
   overlay.style.cssText = `
@@ -33,7 +31,7 @@ function createOverlay(color) {
 }
 
 const transitions = {
-  // Simple crossfade (1.5s)
+  // Fade biasa.
   crossfade(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
     tl.set(to, { opacity: 0, scale: 1, x: 0, y: 0 })
@@ -44,11 +42,10 @@ const transitions = {
     from.classList.remove('active')
   },
 
-  // Close everything to the button (circle transition for Start Story)
+  // Tutup ke tombol start.
   closeToButton(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
-    
-    // Calculate center of the Start Story button's arrow icon
+
     let cx = '15%'
     let cy = '60%'
     const btnIcon = from.querySelector('.btn-icon')
@@ -63,11 +60,9 @@ const transitions = {
     
     to.classList.add('active')
     
-    // Set initial states immediately at timeline position 0
     tl.set(to, { opacity: 0 }, 0)
     tl.set(from, { clipPath: `circle(150% at ${cx} ${cy})`, zIndex: 10, opacity: 1 }, 0)
-    
-    // Start animations at position 0 so there's absolutely no delay
+
     tl.to(to, { opacity: 1, duration: 0.3, ease: 'power1.out' }, 0)
     tl.to(from, { 
       clipPath: `circle(0% at ${cx} ${cy})`, 
@@ -75,18 +70,16 @@ const transitions = {
       ease: 'power2.inOut' 
     }, 0)
     
-    // Cleanup
     tl.set(from, { opacity: 0, clipPath: 'none', zIndex: '' })
     tl.call(() => {
       from.classList.remove('active')
     })
   },
 
-  // Open the hero screen from the favicon (circle expanding out)
+  // Buka dari tombol akhir.
   openFromFavicon(from, to, done) {
     const tl = gsap.timeline({ onComplete: done })
-    
-    // Calculate center of the Favicon button
+
     let cx = '50%'
     let cy = '40%'
     const btnIcon = from.querySelector('.ending-favicon')
@@ -101,24 +94,19 @@ const transitions = {
     
     to.classList.add('active')
     
-    // Set initial states immediately at timeline position 0
-    // We animate 'to' (Hero) to grow out of 'from' (Ending Screen)
     tl.set(from, { opacity: 1 }, 0)
     tl.set(to, { opacity: 1, clipPath: `circle(0% at ${cx} ${cy})`, zIndex: 10 }, 0)
-    
-    // Start expanding 'to'
+
     tl.to(to, { 
       clipPath: `circle(150% at ${cx} ${cy})`, 
       duration: 1.1, 
       ease: 'power2.inOut' 
     }, 0)
     
-    // Cleanup
     tl.set(to, { clipPath: 'none', zIndex: '' })
-    tl.set(from, { opacity: 0 }) // Fix bug: hide 'from' screen completely
+    tl.set(from, { opacity: 0 })
     tl.call(() => {
       from.classList.remove('active')
     })
   }
 }
-
