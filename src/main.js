@@ -1,5 +1,5 @@
 import './style.css'
-import { renderScreens, getTotalScreens, getChapterForScreenIndex, getFirstScreenIndexForChapter } from './scene-manager.js'
+import { renderScreens, getTotalScreens, getChapterForScreenIndex, getFirstScreenIndexForChapter, loadChapterImages } from './scene-manager.js'
 import { initScrollController } from './scroll-controller.js'
 import { transitionScenes } from './transitions.js'
 import { initAudio } from './audio-controller.js'
@@ -69,6 +69,9 @@ initScrollController((fromIndex, toIndex) => {
     transitionScenes(fromEl, toEl)
   }
 
+  const chapter = getChapterForScreenIndex(toIndex)
+  if (chapter !== null) loadChapterImages(chapter)
+
   saveScreenIndex(toIndex)
   preloadNearbyScenes(toIndex, 2)
 }, initialScreenIndex)
@@ -115,7 +118,9 @@ if (shouldShowNotification) {
   })
 }
 
-// Muat gambar awal lebih dulu.
+// Muat gambar awal: chapter dari posisi awal (atau chapter 1 jika di hero).
+const initialChapter = getChapterForScreenIndex(initialScreenIndex) ?? 1
+loadChapterImages(initialChapter)
 preloadInitialScenes(4)
 preloadNearbyScenes(initialScreenIndex, 2)
 
@@ -133,19 +138,19 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Batasi inspect umum.
-document.addEventListener('contextmenu', (e) => {
-  e.preventDefault()
-})
+// document.addEventListener('contextmenu', (e) => {
+//   e.preventDefault()
+// })
 
-document.addEventListener('keydown', (e) => {
-  const key = e.key.toLowerCase()
-  const blockedInspectShortcut =
-    key === 'f12' ||
-    ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(key)) ||
-    ((e.ctrlKey || e.metaKey) && key === 'u')
+// document.addEventListener('keydown', (e) => {
+//   const key = e.key.toLowerCase()
+//   const blockedInspectShortcut =
+//     key === 'f12' ||
+//     ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(key)) ||
+//     ((e.ctrlKey || e.metaKey) && key === 'u')
 
-  if (blockedInspectShortcut) {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-})
+//   if (blockedInspectShortcut) {
+//     e.preventDefault()
+//     e.stopPropagation()
+//   }
+// })

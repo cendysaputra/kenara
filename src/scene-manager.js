@@ -1,14 +1,5 @@
 import { screens } from './data/screens.js'
 
-const imageModules = import.meta.glob('../assets/img/*.{png,jpg,jpeg,webp,avif}', {
-  eager: true,
-  import: 'default'
-})
-
-const imageAssetMap = new Map(
-  Object.entries(imageModules).map(([path, assetUrl]) => [path.split('/').pop(), assetUrl])
-)
-
 export function getTotalScreens() {
   return screens.length
 }
@@ -21,24 +12,9 @@ function isMobile() {
   return window.innerWidth < 768
 }
 
-function resolveAssetUrl(assetPath) {
-  if (!assetPath) return null
-
-  const fileName = assetPath.split('/').pop()
-  return imageAssetMap.get(fileName) || assetPath
-}
-
-function assetExists(assetPath) {
-  if (!assetPath) return false
-  return imageAssetMap.has(assetPath.split('/').pop())
-}
-
 export function getBackgroundForScreen(data) {
-  if (isMobile() && data.backgroundMobile && assetExists(data.backgroundMobile)) {
-    return resolveAssetUrl(data.backgroundMobile)
-  }
-
-  return resolveAssetUrl(data.background)
+  if (isMobile() && data.backgroundMobile) return data.backgroundMobile
+  return data.background || null
 }
 
 export function getChapterForScreenIndex(index) {
@@ -50,6 +26,17 @@ export function getChapterForScreenIndex(index) {
 
 export function getFirstScreenIndexForChapter(chapter) {
   return screens.findIndex(s => s.type === 'chapter-card' && s.chapter === chapter)
+}
+
+export function loadChapterImages(chapter) {
+  const allScreenEls = [...document.querySelectorAll('.screen')]
+  screens.forEach((data, index) => {
+    if (data.chapter !== chapter) return
+    const el = allScreenEls[index]
+    if (!el || !el.dataset.bg) return
+    el.style.backgroundImage = `url('${el.dataset.bg}')`
+    delete el.dataset.bg
+  })
 }
 
 export function renderScreens(container) {
@@ -138,7 +125,7 @@ function renderScene(data, index) {
   el.dataset.chapter = data.chapter
   el.dataset.scene = data.scene
   el.dataset.textPosition = data.textPosition
-  el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
+  el.dataset.bg = getBackgroundForScreen(data)
 
   el.innerHTML = `
     <div class="scene-text">
@@ -154,7 +141,7 @@ function renderEnding(data, index) {
   el.className = 'screen screen-ending'
 
   const currentYear = new Date().getFullYear()
-  const faviconUrl = resolveAssetUrl('/assets/img/favicon.png')
+  const faviconUrl = '/assets/img/misc/favicon.png'
 
   el.innerHTML = `
     <button class="ending-favicon" onclick="if(window.stopThemeAudio) window.stopThemeAudio(); window.scrollToScreen(0)" aria-label="Back to start">
@@ -176,8 +163,12 @@ window.addEventListener('resize', () => {
     document.querySelectorAll('.screen-scene, .screen-hero').forEach(el => {
       const index = parseInt(el.dataset.index)
       const data = getScreenData()[index]
-      if (data) {
-        el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
+      if (!data) return
+      const newUrl = getBackgroundForScreen(data)
+      if (el.dataset.bg) {
+        el.dataset.bg = newUrl
+      } else {
+        el.style.backgroundImage = `url('${newUrl}')`
       }
     })
   }
