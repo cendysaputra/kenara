@@ -1,9 +1,8 @@
 import './style.css'
-import { renderScreens, getTotalScreens, getChapterForScreenIndex, getFirstScreenIndexForChapter, loadChapterImages } from './scene-manager.js'
+import { renderScreens, getTotalScreens, getFirstScreenIndexForChapter, loadImagesAround, setHeroVideoActive } from './scene-manager.js'
 import { initScrollController } from './scroll-controller.js'
 import { transitionScenes } from './transitions.js'
 import { initAudio } from './audio-controller.js'
-import { preloadInitialScenes, preloadNearbyScenes } from './image-preloader.js'
 import { initTranslate } from './translate-controller.js'
 
 const SCREEN_STORAGE_KEY = 'kenara-screen-index'
@@ -65,15 +64,14 @@ initScrollController((fromIndex, toIndex) => {
     document.body.classList.remove('hero-active')
   }
 
+  loadImagesAround(toIndex)
+  setHeroVideoActive(toIndex === 0)
+
   if (fromEl && toEl) {
     transitionScenes(fromEl, toEl)
   }
 
-  const chapter = getChapterForScreenIndex(toIndex)
-  if (chapter !== null) loadChapterImages(chapter)
-
   saveScreenIndex(toIndex)
-  preloadNearbyScenes(toIndex, 2)
 }, initialScreenIndex)
 
 // Tombol chapter.
@@ -118,11 +116,9 @@ if (shouldShowNotification) {
   })
 }
 
-// Muat gambar awal: chapter dari posisi awal (atau chapter 1 jika di hero).
-const initialChapter = getChapterForScreenIndex(initialScreenIndex) ?? 1
-loadChapterImages(initialChapter)
-preloadInitialScenes(4)
-preloadNearbyScenes(initialScreenIndex, 2)
+// Muat gambar awal di sekitar posisi awal saja.
+loadImagesAround(initialScreenIndex)
+setHeroVideoActive(initialScreenIndex === 0)
 
 // Cegah zoom tak sengaja.
 document.addEventListener('wheel', (e) => {

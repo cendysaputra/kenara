@@ -1,5 +1,3 @@
-import heroVideo from '../../assets/kenara-hero.mp4'
-
 const IMAGE_BASE = "/assets/img"
 const MISC = `${IMAGE_BASE}/misc`
 const CH = (n) => `${IMAGE_BASE}/chapter-${n}`
@@ -10,7 +8,7 @@ export const screens = [
     type: "hero",
     background: `${MISC}/cover-hero.jpg`,
     backgroundMobile: `${MISC}/cover-hero.jpg`,
-    video: heroVideo,
+    video: '/assets/kenara-hero.mp4',
     title: "The Golden Shell",
     subtitle: "An Indonesian Fairy Tale"
   },

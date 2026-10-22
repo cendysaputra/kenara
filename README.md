@@ -32,4 +32,17 @@
 4. The server will run, usually on `http://localhost:5173`. Open it in your browser to read the story!
 
 ## Note on Media
-The video files (such as background MP4 sequences) are deliberately excluded (`.gitignore`) to keep the repository lightweight. If you wish to use them locally, place the missing `.mp4` files into `assets/img/`.
+Media files (`public/assets/img/`, `*.mp4`, `*.mp3`) are excluded from git (`.gitignore`) to keep the repository lightweight. Place them locally before running or building:
+
+- `public/assets/img/` (`misc/`, `chapter-1/` … `chapter-7/`)
+- `public/assets/kenara-hero.mp4`
+- `public/assets/kenara-sound.mp3`
+
+Everything in `public/` is copied as-is into `dist/` by `npm run build`.
+
+## Deploy (Cloudflare Pages)
+
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name kenara
+```

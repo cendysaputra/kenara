@@ -28,15 +28,34 @@ export function getFirstScreenIndexForChapter(chapter) {
   return screens.findIndex(s => s.type === 'chapter-card' && s.chapter === chapter)
 }
 
-export function loadChapterImages(chapter) {
-  const allScreenEls = [...document.querySelectorAll('.screen')]
-  screens.forEach((data, index) => {
-    if (data.chapter !== chapter) return
-    const el = allScreenEls[index]
-    if (!el || !el.dataset.bg) return
+// Lazyload: pasang background hanya untuk layar di sekitar posisi aktif.
+export function loadImagesAround(index, lookBehind = 1, lookAhead = 2) {
+  const allScreenEls = document.querySelectorAll('.screen')
+  const start = Math.max(index - lookBehind, 0)
+  const end = Math.min(index + lookAhead, allScreenEls.length - 1)
+
+  for (let i = start; i <= end; i++) {
+    const el = allScreenEls[i]
+    if (!el || !el.dataset.bg) continue
     el.style.backgroundImage = `url('${el.dataset.bg}')`
     delete el.dataset.bg
-  })
+  }
+}
+
+// Video hero baru dimuat (dan diputar) saat hero aktif.
+export function setHeroVideoActive(active) {
+  const video = document.querySelector('.screen-hero video')
+  if (!video) return
+
+  if (active) {
+    if (video.dataset.src) {
+      video.src = video.dataset.src
+      delete video.dataset.src
+    }
+    video.play().catch(() => {})
+  } else {
+    video.pause()
+  }
 }
 
 export function renderScreens(container) {
@@ -72,20 +91,20 @@ function renderHero(data, index) {
   el.className = `screen screen-hero ${index === 0 ? 'active' : ''}`
 
   // Gambar tetap jadi fallback.
-  el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
+  el.dataset.bg = getBackgroundForScreen(data)
 
   let videoHTML = ''
   if (data.video) {
     videoHTML = `
       <div class="hero-video-bg">
-        <video src="${data.video}" autoplay loop muted playsinline></video>
+        <video data-src="${data.video}" loop muted playsinline preload="none"></video>
       </div>
     `
   } else if (data.youtubeId) {
     const ytUrl = `https://www.youtube.com/embed/${data.youtubeId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${data.youtubeId}&playsinline=1`
     videoHTML = `
       <div class="hero-video-bg">
-        <iframe src="${ytUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe src="${ytUrl}" loading="lazy" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
     `
   }
@@ -145,7 +164,7 @@ function renderEnding(data, index) {
 
   el.innerHTML = `
     <button class="ending-favicon" onclick="if(window.stopThemeAudio) window.stopThemeAudio(); window.scrollToScreen(0)" aria-label="Back to start">
-      <img src="${faviconUrl}" alt="Favicon" />
+      <img src="${faviconUrl}" alt="Favicon" loading="lazy" decoding="async" />
     </button>
     <p class="ending-text">${data.text}</p>
     <p class="ending-credit">${data.credit}</p>

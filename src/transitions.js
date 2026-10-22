@@ -15,6 +15,15 @@ export function transitionScenes(fromEl, toEl, onComplete) {
 
   const transitionEffect = transitions[effectName] || transitions['crossfade']
 
+  // Hentikan transisi sebelumnya supaya layar lain tidak tertinggal setengah tampil.
+  document.querySelectorAll('.screen').forEach(screen => {
+    gsap.killTweensOf(screen)
+    if (screen !== fromEl && screen !== toEl) {
+      screen.classList.remove('active')
+      gsap.set(screen, { opacity: 0, clipPath: 'none', zIndex: '' })
+    }
+  })
+
   transitionEffect(fromEl, toEl, () => {
     if (onComplete) onComplete()
   })
