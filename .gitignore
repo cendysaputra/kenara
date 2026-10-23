@@ -30,9 +30,9 @@ vite.config.ts.timestamp-*
 # Custom ignores
 agent/
 backup-img/
-assets/
 
 # Media
 *.mp4
-assets/img/*.mp4
-assets/kenara-sound.mp3
+*.mp3
+!assets/kenara-hero.mp4
+!assets/kenara-sound.mp3

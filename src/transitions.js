@@ -1,5 +1,7 @@
 import { gsap } from 'gsap'
 
+let activeTimeline = null
+
 export function transitionScenes(fromEl, toEl, onComplete) {
   const fromIndex = parseInt(fromEl.dataset.index)
   const toIndex = parseInt(toEl.dataset.index)
@@ -13,21 +15,15 @@ export function transitionScenes(fromEl, toEl, onComplete) {
     effectName = 'openFromFavicon'
   }
 
+  // Selesaikan transisi lama agar tween tidak bertabrakan.
+  if (activeTimeline) activeTimeline.progress(1)
+
   const transitionEffect = transitions[effectName] || transitions['crossfade']
 
-  transitionEffect(fromEl, toEl, () => {
+  activeTimeline = transitionEffect(fromEl, toEl, () => {
+    activeTimeline = null
     if (onComplete) onComplete()
   })
-}
-
-function createOverlay(color) {
-  const overlay = document.createElement('div')
-  overlay.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-    background: ${color}; z-index: 40; opacity: 0; pointer-events: none;
-  `
-  document.body.appendChild(overlay)
-  return overlay
 }
 
 const transitions = {
@@ -40,6 +36,7 @@ const transitions = {
     tl.set(from, { opacity: 0 })
     to.classList.add('active')
     from.classList.remove('active')
+    return tl
   },
 
   // Tutup ke tombol start.
@@ -74,6 +71,7 @@ const transitions = {
     tl.call(() => {
       from.classList.remove('active')
     })
+    return tl
   },
 
   // Buka dari tombol akhir.
@@ -108,5 +106,6 @@ const transitions = {
     tl.call(() => {
       from.classList.remove('active')
     })
+    return tl
   }
 }

@@ -17,7 +17,11 @@ function readAudioState() {
 }
 
 function writeAudioState(state) {
-  localStorage.setItem(AUDIO_STATE_KEY, JSON.stringify(state))
+  try {
+    localStorage.setItem(AUDIO_STATE_KEY, JSON.stringify(state))
+  } catch {
+    // Storage penuh atau diblokir.
+  }
 }
 
 function isHeroActive() {
@@ -179,7 +183,14 @@ export function initAudio() {
     })
   })
 
-  audioEl.addEventListener('timeupdate', syncAudioState)
+  // timeupdate jalan ~4x per detik; cukup simpan posisi tiap 2 detik.
+  let lastTimeSync = 0
+  audioEl.addEventListener('timeupdate', () => {
+    const now = Date.now()
+    if (now - lastTimeSync < 2000) return
+    lastTimeSync = now
+    syncAudioState()
+  })
   audioEl.addEventListener('pause', syncAudioState)
   audioEl.addEventListener('play', syncAudioState)
   window.addEventListener('beforeunload', () => pauseForHiddenPage())

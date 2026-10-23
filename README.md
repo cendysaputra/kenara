@@ -32,4 +32,4 @@
 4. The server will run, usually on `http://localhost:5173`. Open it in your browser to read the story!
 
 ## Note on Media
-The video files (such as background MP4 sequences) are deliberately excluded (`.gitignore`) to keep the repository lightweight. If you wish to use them locally, place the missing `.mp4` files into `assets/img/`.
+Illustrations live in `public/assets/img/` as WebP (desktop max 2560px, mobile max 1080px). The hero video and background audio in `assets/` are compressed and committed so a fresh clone builds as-is.

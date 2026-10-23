@@ -53,6 +53,25 @@ for (let i = 1; i <= 7; i++) {
   nav.appendChild(dot)
 }
 
+// Video hero hanya diputar saat hero tampil, supaya tidak makan CPU di layar lain.
+const heroVideo = container.querySelector('.hero-video-bg video')
+let heroVideoPauseId = null
+
+function syncHeroVideo(isHeroVisible) {
+  if (!heroVideo) return
+  window.clearTimeout(heroVideoPauseId)
+
+  if (isHeroVisible) {
+    heroVideo.play().catch(() => {})
+    return
+  }
+
+  // Tunggu transisi keluar hero selesai.
+  heroVideoPauseId = window.setTimeout(() => heroVideo.pause(), 1200)
+}
+
+syncHeroVideo(initialScreenIndex === 0)
+
 // Nyalakan kontrol pindah layar.
 initScrollController((fromIndex, toIndex) => {
   const allScreens = container.querySelectorAll('.screen')
@@ -64,6 +83,7 @@ initScrollController((fromIndex, toIndex) => {
   } else {
     document.body.classList.remove('hero-active')
   }
+  syncHeroVideo(toIndex === 0)
 
   if (fromEl && toEl) {
     transitionScenes(fromEl, toEl)

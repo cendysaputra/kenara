@@ -9,7 +9,13 @@ function setCookie(name, value) {
 }
 
 function clearCookie(name) {
-  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`
+  const expired = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`
+  document.cookie = expired
+
+  // Google Translate juga menulis cookie di level domain; tanpa ini halaman tetap terjemahan setelah reload.
+  const host = window.location.hostname
+  document.cookie = `${expired}; domain=${host}`
+  document.cookie = `${expired}; domain=.${host}`
 }
 
 function getSavedLanguage() {
