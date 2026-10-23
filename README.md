@@ -32,17 +32,8 @@
 4. The server will run, usually on `http://localhost:5173`. Open it in your browser to read the story!
 
 ## Note on Media
-Media files (`public/assets/img/`, `*.mp4`, `*.mp3`) are excluded from git (`.gitignore`) to keep the repository lightweight. Place them locally before running or building:
+All media lives in `public/assets/` and is committed, so a fresh clone builds as-is: illustrations in `public/assets/img/` as WebP (desktop max 2560px, mobile max 1080px), plus `public/assets/kenara-hero.mp4` and `public/assets/kenara-sound.mp3`. Everything in `public/` is copied as-is into `dist/` by `npm run build`.
 
-- `public/assets/img/` (`misc/`, `chapter-1/` … `chapter-7/`)
-- `public/assets/kenara-hero.mp4`
-- `public/assets/kenara-sound.mp3`
+## Deploy (Vercel)
 
-Everything in `public/` is copied as-is into `dist/` by `npm run build`.
-
-## Deploy (Cloudflare Pages)
-
-```bash
-npm run build
-npx wrangler pages deploy dist --project-name kenara
-```
+Vercel auto-detects the Vite framework. Build command `npm run build`, output directory `dist`.

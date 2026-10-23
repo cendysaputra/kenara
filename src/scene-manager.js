@@ -43,9 +43,12 @@ export function loadImagesAround(index, lookBehind = 1, lookAhead = 2) {
 }
 
 // Video hero baru dimuat (dan diputar) saat hero aktif.
+let heroVideoPauseId = null
+
 export function setHeroVideoActive(active) {
   const video = document.querySelector('.screen-hero video')
   if (!video) return
+  window.clearTimeout(heroVideoPauseId)
 
   if (active) {
     if (video.dataset.src) {
@@ -53,9 +56,11 @@ export function setHeroVideoActive(active) {
       delete video.dataset.src
     }
     video.play().catch(() => {})
-  } else {
-    video.pause()
+    return
   }
+
+  // Tunggu transisi keluar hero selesai.
+  heroVideoPauseId = window.setTimeout(() => video.pause(), 1200)
 }
 
 export function renderScreens(container) {

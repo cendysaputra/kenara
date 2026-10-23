@@ -46,12 +46,12 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
     if (Math.abs(e.deltaY) > 20) {
       navigate(e.deltaY > 0 ? 1 : -1)
     }
-  }, { passive: false })
+  }, { passive: true })
 
   // Swipe layar.
   window.addEventListener('touchstart', (e) => {
     touchStartY = e.changedTouches[0].screenY
-  }, { passive: false })
+  }, { passive: true })
 
   window.addEventListener('touchend', (e) => {
     const touchEndY = e.changedTouches[0].screenY
@@ -59,10 +59,13 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
     if (Math.abs(deltaY) > 50) {
       navigate(deltaY > 0 ? 1 : -1)
     }
-  }, { passive: false })
+  }, { passive: true })
 
   // Tombol keyboard.
   window.addEventListener('keydown', (e) => {
+    // Biarkan Space/Enter tetap menekan tombol yang sedang fokus.
+    if (e.key === ' ' && e.target.closest?.('button, a, input, select, textarea')) return
+
     if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
       e.preventDefault()
       navigate(1)
@@ -70,7 +73,7 @@ export function initScrollController(onScreenChange, initialScreen = 0) {
       e.preventDefault()
       navigate(-1)
     }
-  }, { passive: false })
+  })
   
   // Set UI awal.
   updateProgressBar(currentScreen / (totalScreens - 1))
