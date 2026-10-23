@@ -139,7 +139,12 @@ function renderHero(data, index) {
       <h1 class="hero-title">${data.title}</h1>
       <button class="hero-start-btn" onclick="window.scrollToScreen(1); if(window.playThemeAudio) window.playThemeAudio();">
         <span class="btn-text">Start Story</span>
-        <span class="btn-icon">→</span>
+        <span class="btn-icon" aria-hidden="true">
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path class="btn-arrow-line" d="M4 12h15" />
+            <path class="btn-arrow-head" d="M13 6l6 6-6 6" />
+          </svg>
+        </span>
       </button>
     </div>
     <div class="hero-copyright">&copy; ${currentYear} Cendy Saputra</div>
