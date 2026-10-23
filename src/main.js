@@ -9,14 +9,31 @@ const SCREEN_STORAGE_KEY = 'kenara-screen-index'
 const AUDIO_NOTIFICATION_KEY = 'kenara-audio-notification-shown'
 const AUDIO_NOTIFICATION_AUTO_HIDE_MS = 10000
 
+// Storage bisa diblokir browser (cookie diblokir/mode privat).
+function readStorage(storageName, key) {
+  try {
+    return window[storageName].getItem(key)
+  } catch {
+    return null
+  }
+}
+
+function writeStorage(storageName, key, value) {
+  try {
+    window[storageName].setItem(key, value)
+  } catch {
+    // Abaikan jika storage tidak bisa dipakai.
+  }
+}
+
 function getSavedScreenIndex(totalScreens) {
-  const rawValue = Number.parseInt(localStorage.getItem(SCREEN_STORAGE_KEY) ?? '0', 10)
+  const rawValue = Number.parseInt(readStorage('localStorage', SCREEN_STORAGE_KEY) ?? '0', 10)
   if (Number.isNaN(rawValue)) return 0
   return Math.min(Math.max(rawValue, 0), totalScreens - 1)
 }
 
 function saveScreenIndex(index) {
-  localStorage.setItem(SCREEN_STORAGE_KEY, String(index))
+  writeStorage('localStorage', SCREEN_STORAGE_KEY, String(index))
 }
 
 function applyInitialScreenState(index) {
@@ -33,13 +50,13 @@ function applyInitialScreenState(index) {
 const container = document.getElementById('story-container')
 const totalScreens = renderScreens(container)
 const SESSION_ENTRY_KEY = 'kenara-session-entered'
-const isFirstSessionEntry = sessionStorage.getItem(SESSION_ENTRY_KEY) !== 'true'
+const isFirstSessionEntry = readStorage('sessionStorage', SESSION_ENTRY_KEY) !== 'true'
 const savedScreenIndex = getSavedScreenIndex(totalScreens)
 const initialScreenIndex = isFirstSessionEntry ? 0 : savedScreenIndex
 applyInitialScreenState(initialScreenIndex)
 saveScreenIndex(initialScreenIndex)
 if (isFirstSessionEntry) {
-  sessionStorage.setItem(SESSION_ENTRY_KEY, 'true')
+  writeStorage('sessionStorage', SESSION_ENTRY_KEY, 'true')
 }
 
 // Buat tombol chapter.
@@ -63,6 +80,9 @@ initScrollController((fromIndex, toIndex) => {
   } else {
     document.body.classList.remove('hero-active')
   }
+
+  // Lepas fokus tombol di layar lama agar Space/Enter tidak menekannya lagi.
+  if (fromEl?.contains(document.activeElement)) document.activeElement.blur()
 
   loadImagesAround(toIndex)
   setHeroVideoActive(toIndex === 0)
@@ -92,7 +112,7 @@ initTranslate()
 // Tampilkan info audio di kunjungan awal.
 const THREE_HOURS = 3 * 60 * 60 * 1000
 const now = Date.now()
-const lastNotificationTime = localStorage.getItem(AUDIO_NOTIFICATION_KEY)
+const lastNotificationTime = readStorage('localStorage', AUDIO_NOTIFICATION_KEY)
 
 const shouldShowNotification = !lastNotificationTime || (now - parseInt(lastNotificationTime)) >= THREE_HOURS
 
@@ -101,7 +121,7 @@ if (shouldShowNotification) {
     const notification = document.getElementById('audio-notification')
     if (notification) {
       notification.classList.add('show')
-      localStorage.setItem(AUDIO_NOTIFICATION_KEY, String(now))
+      writeStorage('localStorage', AUDIO_NOTIFICATION_KEY, String(now))
       setTimeout(() => {
         notification.classList.remove('show')
       }, AUDIO_NOTIFICATION_AUTO_HIDE_MS)
