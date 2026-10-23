@@ -327,13 +327,76 @@ body[data-translate-pending="true"] #story-container {
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-wrap: balance;
+  /* Mask untuk judul yang naik dari bawah */
+  overflow: hidden;
+  padding: 0 0.1em 0.08em;
+}
+
+.chapter-card-title-text {
+  display: block;
+}
+
+.chapter-card-rule {
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin-top: 20px;
+  background: var(--gold-accent);
+  opacity: 0.8;
 }
 
 /* SCENE */
 .screen-scene {
-  background-size: cover;
+  /* Gambar dilukis oleh ::before agar bisa digerakkan tanpa ikut menggeser teks */
+  background-size: 0 0;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.screen-scene::before,
+.screen-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.screen-scene::before {
+  z-index: 0;
+  background-image: inherit;
+  background-position: inherit;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: translate3d(calc(var(--bg-x, 0) * 1%), calc(var(--bg-y, 0) * 1%), 0) scale(var(--bg-scale, 1));
+}
+
+.screen-scene.active::before,
+.screen-scene.is-leaving::before {
+  will-change: transform;
+}
+
+/* Redup saat layar ditinggalkan */
+.screen-scene::after {
+  z-index: 1;
+  background: var(--dark-scene);
+  opacity: var(--shade, 0);
+}
+
+/* Wipe lembut layar baru, searah baca */
+.screen.is-turning {
+  --wipe-angle: 262deg;
+  -webkit-mask-image: linear-gradient(var(--wipe-angle), #000 calc(var(--wipe, 130) * 1% - 30%), transparent calc(var(--wipe, 130) * 1%));
+  mask-image: linear-gradient(var(--wipe-angle), #000 calc(var(--wipe, 130) * 1% - 30%), transparent calc(var(--wipe, 130) * 1%));
+}
+
+.screen.is-turning[data-turn="backward"] {
+  --wipe-angle: 82deg;
+}
+
+/* Teks scene muncul baris demi baris */
+.scene-body.is-revealing {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--reveal, 1) * 140% - 40%), transparent calc(var(--reveal, 1) * 140%));
+  mask-image: linear-gradient(to bottom, #000 calc(var(--reveal, 1) * 140% - 40%), transparent calc(var(--reveal, 1) * 140%));
 }
 
 .screen-scene[data-text-position="left"] {
@@ -452,9 +515,9 @@ body[data-translate-pending="true"] #story-container {
 .ending-credit {
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--text-muted);
   margin-top: 32px;
-  opacity: 0.5;
+  /* Transparansi lewat warna agar opacity bebas dipakai animasi */
+  color: rgba(156, 133, 112, 0.5);
 }
 
 /* UI */
@@ -821,15 +884,19 @@ body.hero-active #bottom-controls button {
     text-align: center;
   }
 
+  /* Pakai top, bukan transform, agar tidak bentrok dengan animasi */
   .chapter-card-title {
     font-size: 36px;
     text-align: center;
-    transform: translateY(-40px);
+    position: relative;
+    top: -40px;
   }
 
-  .chapter-card-label {
+  .chapter-card-label,
+  .chapter-card-rule {
     text-align: center;
-    transform: translateY(-40px);
+    position: relative;
+    top: -40px;
   }
 
   /* Ending — left aligned */
@@ -925,5 +992,17 @@ body.hero-active #bottom-controls button {
 
   #info-btn {
     font-size: 16px;
+  }
+}
+
+/* Kurangi gerak */
+@media (prefers-reduced-motion: reduce) {
+  .screen-scene::before {
+    transform: none;
+  }
+
+  .mobile-scroll-hint {
+    animation: none;
+    opacity: 0.6;
   }
 }

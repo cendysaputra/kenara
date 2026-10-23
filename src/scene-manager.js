@@ -154,7 +154,8 @@ function renderChapterCard(data, index) {
 
   el.innerHTML = `
     <span class="chapter-card-label">Chapter ${data.chapter}</span>
-    <h2 class="chapter-card-title">${data.chapterTitle}</h2>
+    <h2 class="chapter-card-title"><span class="chapter-card-title-text">${data.chapterTitle}</span></h2>
+    <span class="chapter-card-rule" aria-hidden="true"></span>
   `
   return el
 }

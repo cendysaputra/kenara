@@ -1,7 +1,7 @@
 import './style.css'
 import { renderScreens, getTotalScreens, getFirstScreenIndexForChapter, loadImagesAround, setHeroVideoActive } from './scene-manager.js'
 import { initScrollController } from './scroll-controller.js'
-import { transitionScenes } from './transitions.js'
+import { transitionScenes, playIntro } from './transitions.js'
 import { initAudio } from './audio-controller.js'
 import { initTranslate } from './translate-controller.js'
 
@@ -139,6 +139,7 @@ if (shouldShowNotification) {
 // Muat gambar awal di sekitar posisi awal saja.
 loadImagesAround(initialScreenIndex)
 setHeroVideoActive(initialScreenIndex === 0)
+playIntro(container.querySelectorAll('.screen')[initialScreenIndex])
 
 // Cegah zoom tak sengaja.
 document.addEventListener('wheel', (e) => {
