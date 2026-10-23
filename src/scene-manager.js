@@ -17,6 +17,21 @@ export function getBackgroundForScreen(data) {
   return data.background || null
 }
 
+// Hero: webp animasi menggantikan cover setelah selesai dimuat.
+function loadHeroAnim(el, data) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const anim = isMobile() ? data.backgroundAnimMobile : data.backgroundAnim
+  if (!anim) return
+  const img = new Image()
+  img.onload = () => {
+    // Abaikan jika viewport sudah berganti mode saat memuat.
+    const current = isMobile() ? data.backgroundAnimMobile : data.backgroundAnim
+    if (current !== anim) return
+    el.style.backgroundImage = `url('${anim}'), url('${getBackgroundForScreen(data)}')`
+  }
+  img.src = anim
+}
+
 export function getChapterForScreenIndex(index) {
   const screen = screens[index]
   if (!screen) return null
@@ -39,6 +54,7 @@ export function loadImagesAround(index, lookBehind = 1, lookAhead = 2) {
     if (!el || !el.dataset.bg) continue
     el.style.backgroundImage = `url('${el.dataset.bg}')`
     delete el.dataset.bg
+    if (el.classList.contains('screen-hero')) loadHeroAnim(el, screens[parseInt(el.dataset.index)])
   }
 }
 
@@ -193,6 +209,7 @@ window.addEventListener('resize', () => {
         el.dataset.bg = newUrl
       } else {
         el.style.backgroundImage = `url('${newUrl}')`
+        if (el.classList.contains('screen-hero')) loadHeroAnim(el, data)
       }
     })
   }

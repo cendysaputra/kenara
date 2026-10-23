@@ -8,6 +8,8 @@ export const screens = [
     type: "hero",
     background: `${MISC}/cover-hero.webp`,
     backgroundMobile: `${MISC}/cover-hero.webp`,
+    backgroundAnim: `${MISC}/hero-anim.webp`,
+    backgroundAnimMobile: `${MISC}/mb-hero-anim.webp`,
     title: "The Golden Shell",
     subtitle: "An Indonesian Fairy Tale"
   },
