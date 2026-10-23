@@ -8,7 +8,6 @@ export const screens = [
     type: "hero",
     background: `${MISC}/cover-hero.webp`,
     backgroundMobile: `${MISC}/cover-hero.webp`,
-    video: '/assets/kenara-hero.mp4',
     title: "The Golden Shell",
     subtitle: "An Indonesian Fairy Tale"
   },

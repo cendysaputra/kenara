@@ -34,5 +34,4 @@ backup-img/
 # Media liar tidak ikut repo; media final di public/assets/ di-commit
 *.mp4
 *.mp3
-!public/assets/kenara-hero.mp4
 !public/assets/kenara-sound.mp3

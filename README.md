@@ -32,7 +32,7 @@
 4. The server will run, usually on `http://localhost:5173`. Open it in your browser to read the story!
 
 ## Note on Media
-All media lives in `public/assets/` and is committed, so a fresh clone builds as-is: illustrations in `public/assets/img/` as WebP (desktop max 2560px, mobile max 1080px), plus `public/assets/kenara-hero.mp4` and `public/assets/kenara-sound.mp3`. Everything in `public/` is copied as-is into `dist/` by `npm run build`.
+All media lives in `public/assets/` and is committed, so a fresh clone builds as-is: illustrations in `public/assets/img/` as WebP (desktop max 2560px, mobile max 1080px), plus `public/assets/kenara-sound.mp3`. Everything in `public/` is copied as-is into `dist/` by `npm run build`.
 
 ## Deploy (Vercel)
 
