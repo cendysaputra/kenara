@@ -270,7 +270,7 @@ body[data-translate-pending="true"] #story-container {
   font-family: var(--font-body);
   font-size: 16px;
   color: black;
-  font-style: italic;
+  font-style: normal;
   z-index: 10;
 }
 
