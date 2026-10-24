@@ -126,7 +126,7 @@ function hideContent(tl, el, at) {
 }
 
 // Kelas mask teks yang dipasang sementara saat teks muncul.
-const TEXT_MASK_CLASSES = ['is-revealing', 'is-bleeding']
+const TEXT_MASK_CLASSES = ['is-revealing', 'is-bleeding', 'is-sweeping']
 
 // Sisi teks (kiri/kanan/tengah) untuk arah gerak teks.
 function textSide(body) {
@@ -160,6 +160,39 @@ function revealSceneText(tl, body, at, variant, dir) {
       at
     )
     return at + 0.8
+  }
+
+  if (variant === 'sweep' || variant === 'slide') {
+    // Tirai/kuas: mask menyapu searah baca; kuas juga menggeser teks dari sisinya.
+    body.classList.add('is-sweeping')
+    body.style.setProperty('--reveal-from', side > 0 ? 'to left' : 'to right')
+    const x = variant === 'slide' ? (side === 0 ? -20 * dir : 28 * side) : 0
+    tl.fromTo(body,
+      { opacity: 0, x, '--reveal': 0 },
+      { opacity: 1, x: 0, '--reveal': 1, duration: 0.85, ease: 'power3.out' },
+      at
+    )
+    return at + 0.85
+  }
+
+  if (variant === 'near') {
+    // Dolly: teks mendekat dan menetap.
+    tl.fromTo(body,
+      { opacity: 0, scale: 1.06 },
+      { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out' },
+      at
+    )
+    return at + 0.8
+  }
+
+  if (variant === 'rise') {
+    // Parallax: teks mengapung masuk searah gulir, sedikit lebih lambat dari layar.
+    tl.fromTo(body,
+      { opacity: 0, y: 44 * dir },
+      { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' },
+      at
+    )
+    return at + 0.85
   }
 
   // Bawaan: baris demi baris lewat mask lembut, naik dan menajam.
@@ -444,6 +477,134 @@ const transitions = {
         }
       }
     })
+  },
+
+  // Tirai: beberapa pita vertikal turun bergantian, seperti tirai bambu dibuka.
+  // Mundur: pita naik dari kanan ke kiri (dicerminkan).
+  curtain(from, to, done, isForward) {
+    return maskTransition(from, to, done, isForward, {
+      duration: 1.15,
+      ease: 'power1.inOut',
+      text: 'sweep',
+      mask() {
+        const count = isNarrow() ? 3 : 5
+        const step = 0.12
+        const spread = 1 + step * (count - 1)
+        const width = 100 / count
+        const images = []
+        const positions = []
+
+        for (let i = 0; i < count; i++) {
+          const order = isForward ? i : count - 1 - i
+          const band = `clamp(0, var(--p) * ${spread.toFixed(2)} - ${(order * step).toFixed(2)}, 1)`
+          images.push(`linear-gradient(${isForward ? 'to bottom' : 'to top'}, #000 calc(${band} * 130% - 30%), transparent calc(${band} * 130%))`)
+          positions.push(`${(i / (count - 1) * 100).toFixed(2)}% 0`)
+        }
+        return { image: images.join(', '), size: `calc(${width.toFixed(3)}% + 1px) 100%`, position: positions.join(', ') }
+      }
+    })
+  },
+
+  // Sapuan kuas: wipe miring dengan goresan bulu kuas tipis di ujung depannya.
+  // Mundur: sapuan dari kanan ke kiri (dicerminkan).
+  brush(from, to, done, isForward) {
+    return maskTransition(from, to, done, isForward, {
+      duration: 1.15,
+      ease: 'power1.inOut',
+      text: 'slide',
+      mask(el) {
+        const rand = seeded(parseInt(el.dataset.index) + 7)
+        const count = isNarrow() ? 10 : 15
+        const lead = 0.16
+        const angle = isForward ? 112 : 292
+        const edge = `(var(--p) * ${(1 + lead).toFixed(2)} - ${lead})`
+
+        // Lapisan utama: sapuan lebar dengan tepi lembut.
+        const images = [`linear-gradient(${angle}deg, #000 calc(${edge} * 120% - 20%), transparent calc(${edge} * 120%))`]
+        const sizes = ['100% 100%']
+        const positions = ['0 0']
+
+        // Goresan tipis acak yang mendahului tepi utama.
+        for (let i = 0; i < count; i++) {
+          const height = 0.6 + rand() * 1.8
+          const y = rand() * (100 - height)
+          const ahead = 0.03 + rand() * lead
+          const stroke = `clamp(0, ${edge} + ${ahead.toFixed(3)}, 1)`
+          images.push(`linear-gradient(${isForward ? 90 : 270}deg, #000 calc(${stroke} * 110% - 10%), transparent calc(${stroke} * 110%))`)
+          sizes.push(`100% ${height.toFixed(2)}%`)
+          positions.push(`0 ${(y / (100 - height) * 100).toFixed(2)}%`)
+        }
+        return { image: images.join(', '), size: sizes.join(', '), position: positions.join(', ') }
+      }
+    })
+  },
+
+  // Dolly: menembus layar lama (membesar dan pudar), layar baru mendekat dari 0.92.
+  // Mundur: kebalikannya, layar asal mengecil dan pudar, layar tujuan mundur dari 1.1.
+  dolly(from, to, done, isForward) {
+    const tl = gsap.timeline({ onComplete: done })
+    const duration = 1.2
+
+    to.classList.add('active')
+    from.classList.add('is-leaving')
+    hideContent(tl, from, 0)
+
+    if (isForward) {
+      gsap.set(to, { opacity: 0, zIndex: 3, scale: 0.92 })
+      gsap.set(from, { opacity: 1, zIndex: 2 })
+      tl.to(to, { opacity: 1, duration: 0.7, ease: 'power1.out' }, 0.05)
+      tl.to(to, { scale: 1, duration, ease: 'power3.out' }, 0)
+      tl.to(from, { scale: 1.12, '--shade': 0.3, duration, ease: 'power2.in' }, 0)
+    } else {
+      gsap.set(from, { opacity: 1, zIndex: 3 })
+      gsap.set(to, { opacity: 1, zIndex: 2, scale: 1.1 })
+      tl.to(from, { scale: 0.92, duration, ease: 'power2.in' }, 0)
+      tl.to(from, { opacity: 0, duration: 0.75, ease: 'power1.in' }, 0.3)
+      tl.to(to, { scale: 1, duration, ease: 'power3.out' }, 0)
+    }
+
+    revealContent(tl, to, 0.5, 'near', isForward ? 1 : -1)
+
+    tl.add(() => {
+      finishLeave(from)
+      finishEnter(to)
+    }, duration)
+
+    return tl
+  },
+
+  // Parallax: layar baru naik searah gulir, layar lama bergeser lebih lambat dan meredup.
+  // Mundur: layar baru turun dari atas.
+  parallax(from, to, done, isForward) {
+    const dir = isForward ? 1 : -1
+    const tl = gsap.timeline({ onComplete: done })
+    const duration = 1.15
+
+    to.classList.add('active')
+    from.classList.add('is-leaving')
+
+    // Tepi depan layar baru dibuat lembut seperti kertas basah.
+    gsap.set(to, { opacity: 1, zIndex: 3, yPercent: 100 * dir, '--feather': 1 })
+    gsap.set(from, { opacity: 1, zIndex: 2 })
+    setMask(to, {
+      image: `linear-gradient(${isForward ? 'to bottom' : 'to top'}, transparent 0, #000 calc(var(--feather) * 10vh))`,
+      size: '100% 100%'
+    })
+
+    tl.to(to, { yPercent: 0, duration, ease: 'power3.inOut' }, 0)
+    tl.to(to, { '--feather': 0, duration: 0.45, ease: 'power1.in' }, duration - 0.5)
+    tl.fromTo(to, { '--bg-y': 7 * dir, '--bg-scale': 1.06 }, { '--bg-y': 0, '--bg-scale': 1, duration: duration + 0.2, ease: 'power3.out' }, 0)
+    tl.to(from, { yPercent: -28 * dir, '--shade': 0.12, duration, ease: 'power3.inOut' }, 0)
+
+    hideContent(tl, from, 0)
+    revealContent(tl, to, 0.45, 'rise', dir)
+
+    tl.add(() => {
+      finishLeave(from)
+      finishEnter(to)
+    }, duration)
+
+    return tl
   },
 
   // Versi reduced motion: fade singkat tanpa gerak.
