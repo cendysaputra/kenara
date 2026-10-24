@@ -17,6 +17,21 @@ export function getBackgroundForScreen(data) {
   return data.background || null
 }
 
+// Hero: webp animasi menggantikan cover setelah selesai dimuat.
+function loadHeroAnim(el, data) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const anim = isMobile() ? data.backgroundAnimMobile : data.backgroundAnim
+  if (!anim) return
+  const img = new Image()
+  img.onload = () => {
+    // Abaikan jika viewport sudah berganti mode saat memuat.
+    const current = isMobile() ? data.backgroundAnimMobile : data.backgroundAnim
+    if (current !== anim) return
+    el.style.backgroundImage = `url('${anim}'), url('${getBackgroundForScreen(data)}')`
+  }
+  img.src = anim
+}
+
 export function getChapterForScreenIndex(index) {
   const screen = screens[index]
   if (!screen) return null
@@ -28,15 +43,40 @@ export function getFirstScreenIndexForChapter(chapter) {
   return screens.findIndex(s => s.type === 'chapter-card' && s.chapter === chapter)
 }
 
-export function loadChapterImages(chapter) {
-  const allScreenEls = [...document.querySelectorAll('.screen')]
-  screens.forEach((data, index) => {
-    if (data.chapter !== chapter) return
-    const el = allScreenEls[index]
-    if (!el || !el.dataset.bg) return
+// Lazyload: pasang background hanya untuk layar di sekitar posisi aktif.
+export function loadImagesAround(index, lookBehind = 1, lookAhead = 2) {
+  const allScreenEls = document.querySelectorAll('.screen')
+  const start = Math.max(index - lookBehind, 0)
+  const end = Math.min(index + lookAhead, allScreenEls.length - 1)
+
+  for (let i = start; i <= end; i++) {
+    const el = allScreenEls[i]
+    if (!el || !el.dataset.bg) continue
     el.style.backgroundImage = `url('${el.dataset.bg}')`
     delete el.dataset.bg
-  })
+    if (el.classList.contains('screen-hero')) loadHeroAnim(el, screens[parseInt(el.dataset.index)])
+  }
+}
+
+// Video hero baru dimuat (dan diputar) saat hero aktif.
+let heroVideoPauseId = null
+
+export function setHeroVideoActive(active) {
+  const video = document.querySelector('.screen-hero video')
+  if (!video) return
+  window.clearTimeout(heroVideoPauseId)
+
+  if (active) {
+    if (video.dataset.src) {
+      video.src = video.dataset.src
+      delete video.dataset.src
+    }
+    video.play().catch(() => {})
+    return
+  }
+
+  // Tunggu transisi keluar hero selesai.
+  heroVideoPauseId = window.setTimeout(() => video.pause(), 1200)
 }
 
 export function renderScreens(container) {
@@ -72,20 +112,20 @@ function renderHero(data, index) {
   el.className = `screen screen-hero ${index === 0 ? 'active' : ''}`
 
   // Gambar tetap jadi fallback.
-  el.style.backgroundImage = `url('${getBackgroundForScreen(data)}')`
+  el.dataset.bg = getBackgroundForScreen(data)
 
   let videoHTML = ''
   if (data.video) {
     videoHTML = `
       <div class="hero-video-bg">
-        <video src="${data.video}" autoplay loop muted playsinline></video>
+        <video data-src="${data.video}" loop muted playsinline preload="none"></video>
       </div>
     `
   } else if (data.youtubeId) {
     const ytUrl = `https://www.youtube.com/embed/${data.youtubeId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${data.youtubeId}&playsinline=1`
     videoHTML = `
       <div class="hero-video-bg">
-        <iframe src="${ytUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe src="${ytUrl}" loading="lazy" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
     `
   }
@@ -99,7 +139,12 @@ function renderHero(data, index) {
       <h1 class="hero-title">${data.title}</h1>
       <button class="hero-start-btn" onclick="window.scrollToScreen(1); if(window.playThemeAudio) window.playThemeAudio();">
         <span class="btn-text">Start Story</span>
-        <span class="btn-icon">→</span>
+        <span class="btn-icon" aria-hidden="true">
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path class="btn-arrow-line" d="M4 12h15" />
+            <path class="btn-arrow-head" d="M13 6l6 6-6 6" />
+          </svg>
+        </span>
       </button>
     </div>
     <div class="hero-copyright">&copy; ${currentYear} Cendy Saputra</div>
@@ -114,7 +159,8 @@ function renderChapterCard(data, index) {
 
   el.innerHTML = `
     <span class="chapter-card-label">Chapter ${data.chapter}</span>
-    <h2 class="chapter-card-title">${data.chapterTitle}</h2>
+    <h2 class="chapter-card-title"><span class="chapter-card-title-text">${data.chapterTitle}</span></h2>
+    <span class="chapter-card-rule" aria-hidden="true"></span>
   `
   return el
 }
@@ -145,7 +191,7 @@ function renderEnding(data, index) {
 
   el.innerHTML = `
     <button class="ending-favicon" onclick="if(window.stopThemeAudio) window.stopThemeAudio(); window.scrollToScreen(0)" aria-label="Back to start">
-      <img src="${faviconUrl}" alt="Favicon" />
+      <img src="${faviconUrl}" alt="Favicon" loading="lazy" decoding="async" />
     </button>
     <p class="ending-text">${data.text}</p>
     <p class="ending-credit">${data.credit}</p>
@@ -169,6 +215,7 @@ window.addEventListener('resize', () => {
         el.dataset.bg = newUrl
       } else {
         el.style.backgroundImage = `url('${newUrl}')`
+        if (el.classList.contains('screen-hero')) loadHeroAnim(el, data)
       }
     })
   }

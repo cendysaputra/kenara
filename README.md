@@ -32,4 +32,8 @@
 4. The server will run, usually on `http://localhost:5173`. Open it in your browser to read the story!
 
 ## Note on Media
-Illustrations live in `public/assets/img/` as WebP (desktop max 2560px, mobile max 1080px). The hero video and background audio in `assets/` are compressed and committed so a fresh clone builds as-is.
+All media lives in `public/assets/` and is committed, so a fresh clone builds as-is: illustrations in `public/assets/img/` as WebP (desktop max 2560px, mobile max 1080px), plus `public/assets/kenara-sound.mp3`. Everything in `public/` is copied as-is into `dist/` by `npm run build`.
+
+## Deploy (Vercel)
+
+Vercel auto-detects the Vite framework. Build command `npm run build`, output directory `dist`.

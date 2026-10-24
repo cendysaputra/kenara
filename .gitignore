@@ -31,8 +31,7 @@ vite.config.ts.timestamp-*
 agent/
 backup-img/
 
-# Media
+# Media liar tidak ikut repo; media final di public/assets/ di-commit
 *.mp4
 *.mp3
-!assets/kenara-hero.mp4
-!assets/kenara-sound.mp3
+!public/assets/kenara-sound.mp3

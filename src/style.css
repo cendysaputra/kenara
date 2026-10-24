@@ -55,6 +55,12 @@
   box-sizing: border-box;
 }
 
+/* Cegah pull-to-refresh saat swipe ke layar sebelumnya */
+html,
+body {
+  overscroll-behavior: none;
+}
+
 body {
   background-color: var(--canvas);
   color: var(--text-body);
@@ -73,6 +79,7 @@ body[data-translate-pending="true"] #story-container {
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -83,6 +90,7 @@ body[data-translate-pending="true"] #story-container {
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   opacity: 0;
   pointer-events: none;
   display: flex;
@@ -197,14 +205,61 @@ body[data-translate-pending="true"] #story-container {
   border: 1px solid rgba(61, 43, 31, 0.2);
   background: transparent;
   color: var(--text-primary);
-  font-size: 20px;
-  transition: all 0.3s ease;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
-.hero-start-btn:hover .btn-icon {
+/* Panah SVG tipis */
+.btn-arrow {
+  width: 22px;
+  height: 22px;
+  overflow: visible;
+  /* Geser sedikit ke kiri agar tampak di tengah saat garis pendek */
+  transform: translateX(-2px);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-arrow-line {
+  transform-box: fill-box;
+  transform-origin: right center;
+  transform: scaleX(0.65);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hover/fokus: panah maju, garis memanjang */
+.hero-start-btn:hover .btn-icon,
+.hero-start-btn:focus-visible .btn-icon {
   background: var(--dark-scene);
   color: var(--canvas);
   border-color: var(--dark-scene);
+}
+
+.hero-start-btn:focus-visible .btn-icon {
+  box-shadow: 0 0 0 3px rgba(200, 162, 78, 0.55);
+}
+
+.hero-start-btn:hover .btn-arrow,
+.hero-start-btn:focus-visible .btn-arrow {
+  transform: translateX(1px);
+}
+
+.hero-start-btn:hover .btn-arrow-line,
+.hero-start-btn:focus-visible .btn-arrow-line {
+  transform: scaleX(1);
+}
+
+.hero-start-btn:active .btn-arrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-arrow,
+  .btn-arrow-line {
+    transition: none;
+  }
 }
 
 .hero-copyright,
@@ -319,13 +374,76 @@ body[data-translate-pending="true"] #story-container {
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-wrap: balance;
+  /* Mask untuk judul yang naik dari bawah */
+  overflow: hidden;
+  padding: 0 0.1em 0.08em;
+}
+
+.chapter-card-title-text {
+  display: block;
+}
+
+.chapter-card-rule {
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin-top: 20px;
+  background: var(--gold-accent);
+  opacity: 0.8;
 }
 
 /* SCENE */
 .screen-scene {
-  background-size: cover;
+  /* Gambar dilukis oleh ::before agar bisa digerakkan tanpa ikut menggeser teks */
+  background-size: 0 0;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.screen-scene::before,
+.screen-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.screen-scene::before {
+  z-index: 0;
+  background-image: inherit;
+  background-position: inherit;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: translate3d(calc(var(--bg-x, 0) * 1%), calc(var(--bg-y, 0) * 1%), 0) scale(var(--bg-scale, 1));
+}
+
+.screen-scene.active::before,
+.screen-scene.is-leaving::before {
+  will-change: transform;
+}
+
+/* Redup saat layar ditinggalkan */
+.screen-scene::after {
+  z-index: 1;
+  background: var(--dark-scene);
+  opacity: var(--shade, 0);
+}
+
+/* Wipe lembut layar baru, searah baca */
+.screen.is-turning {
+  --wipe-angle: 262deg;
+  -webkit-mask-image: linear-gradient(var(--wipe-angle), #000 calc(var(--wipe, 130) * 1% - 30%), transparent calc(var(--wipe, 130) * 1%));
+  mask-image: linear-gradient(var(--wipe-angle), #000 calc(var(--wipe, 130) * 1% - 30%), transparent calc(var(--wipe, 130) * 1%));
+}
+
+.screen.is-turning[data-turn="backward"] {
+  --wipe-angle: 82deg;
+}
+
+/* Teks scene muncul baris demi baris */
+.scene-body.is-revealing {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--reveal, 1) * 140% - 40%), transparent calc(var(--reveal, 1) * 140%));
+  mask-image: linear-gradient(to bottom, #000 calc(var(--reveal, 1) * 140% - 40%), transparent calc(var(--reveal, 1) * 140%));
 }
 
 .screen-scene[data-text-position="left"] {
@@ -444,9 +562,9 @@ body[data-translate-pending="true"] #story-container {
 .ending-credit {
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--text-muted);
   margin-top: 32px;
-  opacity: 0.5;
+  /* Transparansi lewat warna agar opacity bebas dipakai animasi */
+  color: rgba(156, 133, 112, 0.5);
 }
 
 /* UI */
@@ -801,8 +919,13 @@ body.hero-active #bottom-controls button {
   }
 
   .hero-start-btn .btn-icon {
-    line-height: 1;
-    padding-left: 1px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn-arrow {
+    width: 20px;
+    height: 20px;
   }
 
   /* Chapter cards — left aligned */
@@ -813,15 +936,19 @@ body.hero-active #bottom-controls button {
     text-align: center;
   }
 
+  /* Pakai top, bukan transform, agar tidak bentrok dengan animasi */
   .chapter-card-title {
     font-size: 36px;
     text-align: center;
-    transform: translateY(-40px);
+    position: relative;
+    top: -40px;
   }
 
-  .chapter-card-label {
+  .chapter-card-label,
+  .chapter-card-rule {
     text-align: center;
-    transform: translateY(-40px);
+    position: relative;
+    top: -40px;
   }
 
   /* Ending — left aligned */
@@ -917,5 +1044,17 @@ body.hero-active #bottom-controls button {
 
   #info-btn {
     font-size: 16px;
+  }
+}
+
+/* Kurangi gerak */
+@media (prefers-reduced-motion: reduce) {
+  .screen-scene::before {
+    transform: none;
+  }
+
+  .mobile-scroll-hint {
+    animation: none;
+    opacity: 0.6;
   }
 }

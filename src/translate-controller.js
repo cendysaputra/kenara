@@ -18,12 +18,21 @@ function clearCookie(name) {
   document.cookie = `${expired}; domain=.${host}`
 }
 
+// Storage bisa diblokir browser; jangan sampai init gagal.
 function getSavedLanguage() {
-  return localStorage.getItem(STORAGE_KEY) || DEFAULT_LANGUAGE
+  try {
+    return localStorage.getItem(STORAGE_KEY) || DEFAULT_LANGUAGE
+  } catch {
+    return DEFAULT_LANGUAGE
+  }
 }
 
 function saveLanguage(language) {
-  localStorage.setItem(STORAGE_KEY, language)
+  try {
+    localStorage.setItem(STORAGE_KEY, language)
+  } catch {
+    // Abaikan jika storage tidak bisa dipakai.
+  }
 }
 
 function setDocumentLanguage(language) {
@@ -78,6 +87,8 @@ function loadGoogleTranslateScript() {
     script.id = 'google-translate-script'
     script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
     script.async = true
+    // Script gagal dimuat (diblokir/offline): jangan biarkan cerita tersembunyi.
+    script.onerror = () => resolve()
     document.body.appendChild(script)
   })
 
@@ -109,7 +120,7 @@ async function translateToIndonesian() {
   applyGoogleTranslateCookie(TARGET_LANGUAGE)
   await loadGoogleTranslateScript()
 
-  const select = await waitForTranslateSelect()
+  const select = window.google?.translate ? await waitForTranslateSelect() : null
   if (select) {
     select.value = TARGET_LANGUAGE
     select.dispatchEvent(new Event('change'))
@@ -154,7 +165,11 @@ export function initTranslate() {
     const currentScreen = document.querySelector('.screen.active')
     if (currentScreen) {
       const screenIndex = Array.from(document.querySelectorAll('.screen')).indexOf(currentScreen)
-      localStorage.setItem('kenara-screen-index', String(screenIndex))
+      try {
+        localStorage.setItem('kenara-screen-index', String(screenIndex))
+      } catch {
+        // Abaikan jika storage tidak bisa dipakai.
+      }
     }
     window.location.reload()
   })
