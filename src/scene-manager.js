@@ -32,6 +32,27 @@ function loadHeroAnim(el, data) {
   img.src = anim
 }
 
+// Gaya transisi tiap layar: isian data, atau giliran bawaan yang tidak mengulang gaya sebelumnya.
+const SCENE_ROTATION = ['brush', 'parallax', 'curtain', 'dolly', 'iris', 'ink']
+const CARD_ROTATION = ['dolly', 'iris', 'ink']
+
+export function getTransitionName(index) {
+  const data = screens[index]
+  if (!data || data.type === 'hero') return null
+  if (data.transition) return data.transition
+
+  const prevName = getTransitionName(index - 1)
+  const pick = (list, start) => {
+    const name = list[start % list.length]
+    return name === prevName ? list[(start + 1) % list.length] : name
+  }
+
+  if (data.type === 'chapter-card') return pick(CARD_ROTATION, data.chapter - 1)
+  // Dari chapter card ke scene pertama tetap seperti membalik halaman.
+  if (screens[index - 1]?.type === 'chapter-card') return 'pageTurn'
+  return pick(SCENE_ROTATION, index)
+}
+
 export function getChapterForScreenIndex(index) {
   const screen = screens[index]
   if (!screen) return null
@@ -100,6 +121,9 @@ export function renderScreens(container) {
 
     if (el) {
       el.dataset.index = index
+      const transition = getTransitionName(index)
+      if (transition) el.dataset.transition = transition
+      if (data.focus) el.dataset.focus = data.focus
       container.appendChild(el)
     }
   })

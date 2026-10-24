@@ -446,6 +446,18 @@ body[data-translate-pending="true"] #story-container {
   mask-image: linear-gradient(to bottom, #000 calc(var(--reveal, 1) * 140% - 40%), transparent calc(var(--reveal, 1) * 140%));
 }
 
+/* Teks tersapu searah baca */
+.scene-body.is-sweeping {
+  -webkit-mask-image: linear-gradient(var(--reveal-from, to right), #000 calc(var(--reveal, 1) * 140% - 40%), transparent calc(var(--reveal, 1) * 140%));
+  mask-image: linear-gradient(var(--reveal-from, to right), #000 calc(var(--reveal, 1) * 140% - 40%), transparent calc(var(--reveal, 1) * 140%));
+}
+
+/* Teks merembes seperti tinta dari awal baris */
+.scene-body.is-bleeding {
+  -webkit-mask-image: radial-gradient(farthest-corner at var(--reveal-from, 0% 0%), #000 calc(var(--reveal, 1) * 150% - 50%), transparent calc(var(--reveal, 1) * 150%));
+  mask-image: radial-gradient(farthest-corner at var(--reveal-from, 0% 0%), #000 calc(var(--reveal, 1) * 150% - 50%), transparent calc(var(--reveal, 1) * 150%));
+}
+
 .screen-scene[data-text-position="left"] {
   background-position: right center;
 }
