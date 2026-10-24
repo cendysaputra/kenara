@@ -205,6 +205,79 @@ function revealSceneText(tl, body, at, variant, dir) {
   return at + 0.85
 }
 
+// Varian teks chapter card mengikuti efek yang memutarnya.
+const CARD_TEXT = { focus: 'spread', bleed: 'settle' }
+
+function revealCardText(tl, el, at, variant) {
+  const label = el.querySelector('.chapter-card-label')
+  const title = el.querySelector('.chapter-card-title-text')
+  const rule = el.querySelector('.chapter-card-rule')
+
+  if (variant === 'spread') {
+    // Iris: garis emas melebar dulu, judul terbuka dari tengah.
+    if (rule) {
+      tl.fromTo(rule, { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.6, ease: 'power2.out' }, at)
+    }
+    if (label) {
+      tl.fromTo(label, { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, at + 0.15)
+    }
+    if (title) {
+      tl.fromTo(title,
+        { opacity: 0, clipPath: 'inset(0% 50% 0% 50%)' },
+        { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.85, ease: 'power3.inOut' },
+        at + 0.1
+      )
+    }
+    return at + 0.95
+  }
+
+  if (variant === 'settle') {
+    // Tinta: judul menajam dan menetap, garis ditarik dari kiri.
+    if (label) {
+      tl.fromTo(label, { opacity: 0, letterSpacing: '0.35em' }, { opacity: 1, letterSpacing: '0.15em', duration: 0.9, ease: 'power2.out' }, at)
+    }
+    if (title) {
+      tl.fromTo(title,
+        { opacity: 0, scale: 1.05, filter: 'blur(6px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.85, ease: 'power2.out' },
+        at + 0.1
+      )
+    }
+    if (rule) {
+      tl.fromTo(rule,
+        { opacity: 0, scaleX: 0, transformOrigin: '0% 50%' },
+        { opacity: 1, scaleX: 1, duration: 0.6, ease: 'power2.inOut' },
+        at + 0.35
+      )
+    }
+    return at + 0.95
+  }
+
+  // Bawaan: label merapat, judul naik dari balik garis bawah (mask di h2).
+  if (label) {
+    tl.fromTo(label,
+      { opacity: 0, y: 8, letterSpacing: '0.45em' },
+      { opacity: 1, y: 0, letterSpacing: '0.15em', duration: 0.9, ease: 'power3.out' },
+      at
+    )
+  }
+  if (title) {
+    tl.fromTo(title,
+      { opacity: 0, yPercent: 105 },
+      { opacity: 1, yPercent: 0, duration: 0.85, ease: 'expo.out' },
+      at + 0.12
+    )
+  }
+  if (rule) {
+    tl.fromTo(rule,
+      { opacity: 0, scaleX: 0 },
+      { opacity: 1, scaleX: 1, duration: 0.7, ease: 'power2.inOut' },
+      at + 0.3
+    )
+  }
+  return at + 1
+}
+
 function revealContent(tl, el, at, variant = 'lines', dir = 1) {
   const q = sel => el.querySelector(sel)
   let end = at
@@ -213,33 +286,7 @@ function revealContent(tl, el, at, variant = 'lines', dir = 1) {
     const body = q('.scene-body')
     if (body) end = revealSceneText(tl, body, at, variant, dir)
   } else if (el.classList.contains('screen-chapter-card')) {
-    const label = q('.chapter-card-label')
-    const title = q('.chapter-card-title-text')
-    const rule = q('.chapter-card-rule')
-
-    if (label) {
-      tl.fromTo(label,
-        { opacity: 0, y: 8, letterSpacing: '0.45em' },
-        { opacity: 1, y: 0, letterSpacing: '0.15em', duration: 0.9, ease: 'power3.out' },
-        at
-      )
-    }
-    if (title) {
-      // Judul naik dari balik garis bawah (mask di h2).
-      tl.fromTo(title,
-        { opacity: 0, yPercent: 105 },
-        { opacity: 1, yPercent: 0, duration: 0.85, ease: 'expo.out' },
-        at + 0.12
-      )
-    }
-    if (rule) {
-      tl.fromTo(rule,
-        { opacity: 0, scaleX: 0 },
-        { opacity: 1, scaleX: 1, duration: 0.7, ease: 'power2.inOut' },
-        at + 0.3
-      )
-    }
-    end = at + 1
+    end = revealCardText(tl, el, at, CARD_TEXT[variant] || 'rise')
   } else if (el.classList.contains('screen-hero')) {
     const items = [q('.hero-subtitle'), q('.hero-title')].filter(Boolean)
     const button = q('.hero-start-btn')
@@ -346,12 +393,13 @@ function focusPoint(el) {
   const h = window.innerHeight
   const pct = (value, size) => parseFloat(value) / 100 * size
 
+  if (!el.classList.contains('screen-scene')) return { x: w / 2, y: h * 0.46 }
+  // Gambar mobile berbeda komposisi; subjek umumnya di tengah bawah.
+  if (isNarrow()) return { x: w / 2, y: h * 0.62 }
   if (el.dataset.focus) {
     const [fx, fy] = el.dataset.focus.split(' ')
     return { x: pct(fx, w), y: pct(fy, h) }
   }
-  if (!el.classList.contains('screen-scene')) return { x: w / 2, y: h * 0.46 }
-  if (isNarrow()) return { x: w / 2, y: h * 0.62 }
 
   const text = textPoint(el)
   const x = text.x < w * 0.4 ? w * 0.66 : text.x > w * 0.6 ? w * 0.34 : w / 2

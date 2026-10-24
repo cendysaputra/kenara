@@ -2,6 +2,10 @@ const IMAGE_BASE = "/assets/img"
 const MISC = `${IMAGE_BASE}/misc`
 const CH = (n) => `${IMAGE_BASE}/chapter-${n}`
 
+// transition (opsional): pageTurn | ink | iris | curtain | brush | dolly | parallax.
+// Tanpa isian: scene pertama tiap chapter pakai pageTurn, sisanya bergilir.
+// Chapter card bergilir per chapter. focus: titik asal iris (x% y%, desktop).
+
 export const screens = [
   // Hero
   {
@@ -34,6 +38,7 @@ export const screens = [
     type: "scene",
     chapter: 1,
     scene: 2,
+    transition: "parallax",
     text: "King Kertamarta ruled with wisdom. Under his reign, the rivers ran clear and the harvests never failed.",
     textPosition: "left",
     background: `${CH(1)}/chapter-1-scene-2.webp`,
@@ -43,6 +48,7 @@ export const screens = [
     type: "scene",
     chapter: 1,
     scene: 3,
+    transition: "curtain",
     text: "He had two daughters. Candra Kirana, the younger, gentle, kind, adored by everyone. And Galuh Ajeng, the elder, beautiful, but with a heart that always wanted more.",
     textPosition: "right",
     background: `${CH(1)}/chapter-1-scene-3.webp`,
@@ -52,6 +58,7 @@ export const screens = [
     type: "scene",
     chapter: 1,
     scene: 4,
+    transition: "brush",
     text: "For now, the kingdom was at peace. But beneath the surface, something was about to change.",
     textPosition: "top-left",
     background: `${CH(1)}/chapter-1-scene-4.webp`,
@@ -78,6 +85,7 @@ export const screens = [
     type: "scene",
     chapter: 2,
     scene: 2,
+    transition: "dolly",
     text: "When the prince saw Candra Kirana, his heart was decided. And the king, seeing the goodness in both of them, gave his blessing.",
     textPosition: "right",
     background: `${CH(2)}/chapter-2-scene-2.webp`,
@@ -87,6 +95,7 @@ export const screens = [
     type: "scene",
     chapter: 2,
     scene: 3,
+    transition: "curtain",
     text: "The kingdom celebrated. But in the shadow of the festivities, one pair of eyes burned with envy.",
     textPosition: "left",
     background: `${CH(2)}/chapter-2-scene-3.webp`,
@@ -113,6 +122,7 @@ export const screens = [
     type: "scene",
     chapter: 3,
     scene: 2,
+    transition: "dolly",
     text: "\"Destroy her happiness,\" Galuh Ajeng whispered. The witch smiled, and the deal was made.",
     textPosition: "top-center",
     background: `${CH(3)}/chapter-3-scene-2.webp`,
@@ -122,6 +132,7 @@ export const screens = [
     type: "scene",
     chapter: 3,
     scene: 3,
+    transition: "ink",
     text: "Under a moonless sky, the witch cast her curse. Candra Kirana's body began to shrink, her skin hardened into a golden shell. She had become a small, glowing snail.",
     textPosition: "left",
     background: `${CH(3)}/chapter-3-scene-3.webp`,
@@ -131,6 +142,7 @@ export const screens = [
     type: "scene",
     chapter: 3,
     scene: 4,
+    transition: "parallax",
     text: "The witch cast the golden snail into the river. \"This curse shall only break when you find the one who truly loves you,\" she whispered as the current carried it away into the darkness.",
     textPosition: "top-center",
     background: `${CH(3)}/chapter-3-scene-4.webp`,
@@ -157,6 +169,8 @@ export const screens = [
     type: "scene",
     chapter: 4,
     scene: 2,
+    transition: "iris",
+    focus: "58% 74%",
     text: "One afternoon, something unusual caught in her net: a small snail, glowing faintly with golden light. She had never seen anything like it.",
     textPosition: "left",
     background: `${CH(4)}/chapter-4-scene-2.webp`,
@@ -166,6 +180,7 @@ export const screens = [
     type: "scene",
     chapter: 4,
     scene: 3,
+    transition: "brush",
     text: "\"You are beautiful, little one,\" she whispered, gently placing the snail in an earthen jar by the window. \"Stay with me. I could use the company.\"",
     textPosition: "right",
     background: `${CH(4)}/chapter-4-scene-3.webp`,
@@ -192,6 +207,7 @@ export const screens = [
     type: "scene",
     chapter: 5,
     scene: 2,
+    transition: "curtain",
     text: "Curiosity consumed her. One morning, she pretended to leave, but hid behind the wall, watching through a crack.",
     textPosition: "top-center",
     background: `${CH(5)}/chapter-5-scene-2.webp`,
@@ -201,6 +217,8 @@ export const screens = [
     type: "scene",
     chapter: 5,
     scene: 3,
+    transition: "iris",
+    focus: "33% 50%",
     text: "What she saw took her breath away. A beautiful young woman emerged from the golden shell, moving gracefully through the kitchen, cooking, cleaning, caring for the home as if it were her own.",
     textPosition: "right",
     background: `${CH(5)}/chapter-5-scene-3.webp`,
@@ -210,6 +228,7 @@ export const screens = [
     type: "scene",
     chapter: 5,
     scene: 4,
+    transition: "brush",
     text: "\"I am Candra Kirana,\" she said softly. \"A curse turned me into the golden snail you found. It can only be broken by the melody of the sacred gamelan.\"",
     textPosition: "top-left",
     background: `${CH(5)}/chapter-5-scene-4.webp`,
@@ -236,6 +255,7 @@ export const screens = [
     type: "scene",
     chapter: 6,
     scene: 2,
+    transition: "dolly",
     text: "When the prince heard her story, hope returned to his eyes. But the sacred gamelan could only be granted by the gods themselves.",
     textPosition: "right",
     background: `${CH(6)}/chapter-6-scene-2.webp`,
@@ -245,6 +265,7 @@ export const screens = [
     type: "scene",
     chapter: 6,
     scene: 3,
+    transition: "curtain",
     text: "For seven days, the prince fasted and prayed at the edge of the forest. He surrendered his pride, his crown, and his power, asking only for the chance to save the woman he loved.",
     textPosition: "left",
     background: `${CH(6)}/chapter-6-scene-3.webp`,
@@ -254,6 +275,8 @@ export const screens = [
     type: "scene",
     chapter: 6,
     scene: 4,
+    transition: "iris",
+    focus: "67% 38%",
     text: "On the seventh night, the heavens answered. A golden gamelan descended through the mist, glowing with divine light.",
     textPosition: "left",
     background: `${CH(6)}/chapter-6-scene-4.webp`,
@@ -280,6 +303,7 @@ export const screens = [
     type: "scene",
     chapter: 7,
     scene: 2,
+    transition: "parallax",
     text: "Raden Inu began to play. The melody was soft yet powerful, sorrowful yet full of hope. It echoed through the walls, through the trees, through the river where Candra Kirana had once drifted in darkness.",
     textPosition: "top-center",
     background: `${CH(7)}/chapter-7-scene-2.webp`,
@@ -289,6 +313,8 @@ export const screens = [
     type: "scene",
     chapter: 7,
     scene: 3,
+    transition: "iris",
+    focus: "36% 72%",
     text: "The golden shell began to glow, then cracked open. Light poured out like sunrise. Where the snail once lay, Candra Kirana now stood radiant, whole, and free.",
     textPosition: "left",
     background: `${CH(7)}/chapter-7-scene-3.webp`,
@@ -298,6 +324,7 @@ export const screens = [
     type: "scene",
     chapter: 7,
     scene: 4,
+    transition: "brush",
     text: "Their eyes met. No words were needed. The kingdom rejoiced, Mbok Rondo was welcomed as family, and the tale of the golden snail became a story passed down for generations, a reminder that love, kindness, and patience can break even the darkest of curses.",
     textPosition: "top-center",
     background: `${CH(7)}/chapter-7-scene-4.webp`,
@@ -307,6 +334,7 @@ export const screens = [
   // Ending
   {
     type: "ending",
+    transition: "ink",
     text: "And so the tale lives on, passed down from one generation to the next.",
     credit: "A project by Cendy Saputra"
   }
